@@ -6,7 +6,7 @@
 /*   By: nflores <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 11:41:05 by nflores           #+#    #+#             */
-/*   Updated: 2016/05/25 16:44:27 by nflores          ###   ########.fr       */
+/*   Updated: 2016/05/26 11:08:11 by nflores          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ typedef struct			s_champ
 	int					total_size;
 	int					prog_size;
 	t_reg				reg[REG_NUMBER];
-	int					alive;
 }						t_champ;
 
 typedef struct			s_proc

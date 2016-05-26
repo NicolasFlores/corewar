@@ -6,7 +6,7 @@
 /*   By: nflores <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/18 15:21:30 by nflores           #+#    #+#             */
-/*   Updated: 2016/05/25 16:52:17 by nflores          ###   ########.fr       */
+/*   Updated: 2016/05/26 13:43:46 by nflores          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,28 @@ t_param		**init_param(void)
 	return (ret);
 }
 
-void		kill_proc(t_vm **vm, t_proc **exec_proc, int *proc_size)
+void		reset_param(t_param **param)
+{
+	param[0]->reg = NULL;
+	param[0]->ind = NULL;
+	param[0]->dir = NULL;
+	param[1]->reg = NULL;
+	param[1]->ind = NULL;
+	param[1]->dir = NULL;
+	param[2]->reg = NULL;
+	param[2]->ind = NULL;
+	param[2]->dir = NULL;
+}
+
+void		kill_proc(t_vm **vm, t_proc **exec_proc)
 {
 	int i;
 	int j;
 	int tpr;
 
-	i = 0;
-	while (i < *proc_size)
+	i = 0;	
+	tpr = (*vm)->proc;
+	while (i < tpr)
 	{
 		if (exec_proc[i]->live == 0)
 		{
@@ -75,7 +89,6 @@ void		kill_proc(t_vm **vm, t_proc **exec_proc, int *proc_size)
 		i++;
 	}
 	i = 0;
-	tpr = *proc_size;
 	while (i < tpr - 1)
 	{
 		while (exec_proc[i] != NULL)
@@ -87,7 +100,6 @@ void		kill_proc(t_vm **vm, t_proc **exec_proc, int *proc_size)
 			{
 				exec_proc[i] = exec_proc[j];
 				exec_proc[j] = NULL;
-				(*proc_size)--;
 				break ;
 			}
 			j++;
@@ -98,9 +110,9 @@ void		kill_proc(t_vm **vm, t_proc **exec_proc, int *proc_size)
 
 void		ft_game(t_vm *vm, t_champ_list *champ_list)
 {
-	t_proc		*exec_proc[vm->proc];
-	t_param		**param[vm->proc];
-	int			i, j, proc_size;
+	t_proc		**exec_proc;
+	t_param		***param;
+	int			i, j;
 	int			opc[vm->proc], wex[vm->proc];
 	int			codage;
 	t_partype	par;
@@ -108,7 +120,10 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 
 	i = 0;
 	tmp = champ_list;
-	proc_size = vm->proc;
+	exec_proc = (t_proc **)malloc(sizeof(t_proc *) * vm->proc);
+	param = (t_param ***)malloc(sizeof(t_param **) * vm->proc);
+	if (!exec_proc)
+		exit(write(2, "Malloc error\n", 13));
 	while (i < vm->proc)
 	{
 		exec_proc[i] = init_proc(tmp->champ);
@@ -122,14 +137,17 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 	{
 		if (vm->cycles == vm->ctd)
 		{
-			kill_proc(&vm, exec_proc, &proc_size);
+			kill_proc(&vm, exec_proc);
 			vm->ctd += CYCLE_TO_DIE - CYCLE_DELTA;
 		}
 		i = 0;
-		while (i < proc_size)
+		while (i < vm->proc)
 		{
-			if (exec_proc[i]->exec && is_opcode((opc[i] = read_value(vm->mem, exec_proc[i]->pc + 1, 1))))
+			if (opc[i] == 0)
+				opc[i] = read_value(vm->mem, exec_proc[i]->pc + 1, 1);
+			if (exec_proc[i]->exec && is_opcode(opc[i]))
 			{
+				ft_printf("oct = %d opc = %d\n", exec_proc[i]->pc, opc[i]);
 				wex[i] = vm->cycles + nb_cycles(opc[i]);
 				exec_proc[i]->exec = 0;
 				if (opc[i] == 1 || opc[i] == 9 || opc[i] == 12 || opc[i] == 15)
@@ -152,12 +170,14 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 					exec_proc[i]->pc += param_size(par);
 				}
 			}
-			else if (exec_proc[i]->exec && !is_opcode((opc[i] = read_value(vm->mem, exec_proc[i]->pc + 1, 1))))
+			else if (exec_proc[i]->exec && !is_opcode(opc[i]))
 				exec_proc[i]->pc++;
 			if (vm->cycles == wex[i])
 			{
 				g_opcode[opc[i] - 1](&vm, param[i], exec_proc, &(exec_proc[i]));
 				exec_proc[i]->exec = 1;
+				reset_param(param[i]);
+				opc[i] = 0;
 			}
 			i++;
 		}

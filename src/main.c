@@ -6,7 +6,7 @@
 /*   By: nflores <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 17:30:23 by nflores           #+#    #+#             */
-/*   Updated: 2016/05/25 15:34:28 by nflores          ###   ########.fr       */
+/*   Updated: 2016/05/26 10:11:38 by nflores          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ static void	free_mem(t_mem **mem)
 	}
 	free(*mem);
 	*mem = NULL;
+	tmp = NULL;
+	tmp2 = NULL;
 }
 
 static void free_champ(t_champ **champ)
@@ -91,8 +93,8 @@ int			main(int argc, char **argv)
 	vm = init_vm(mem, champ_list);
 	ft_game(vm, champ_list);
 	free(opt);
-	free(vm);
 	free_mem(&mem);
 	free_champ_list(&champ_list);
+	free(vm);
 	return (0);
 }

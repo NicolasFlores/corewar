@@ -6,7 +6,7 @@
 /*   By: nflores <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/17 10:36:54 by nflores           #+#    #+#             */
-/*   Updated: 2016/05/25 15:14:13 by nflores          ###   ########.fr       */
+/*   Updated: 2016/05/26 10:19:53 by nflores          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ void		ft_meminit(t_mem **mem, int size)
 		tmp = tmp->next;
 		i++;
 	}
-	(*mem)->prev = tmp2;
-	tmp2->next = *mem;
+	(*mem)->prev = tmp;
+	tmp->next = *mem;
 	tmp = NULL;
 	tmp2 = NULL;
 }
