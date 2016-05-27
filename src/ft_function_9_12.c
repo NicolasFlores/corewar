@@ -6,7 +6,7 @@
 /*   By: nflores <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/20 15:56:38 by nflores           #+#    #+#             */
-/*   Updated: 2016/05/27 13:01:44 by nflores          ###   ########.fr       */
+/*   Updated: 2016/05/27 15:04:07 by nflores          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int		ft_sti(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 
 	ft_putendl("---sti---");
 //	ft_print_mem((*vm)->mem);
-	printf("write %d\n", lst->param->reg->value);
+	ft_printf("write %d\n", lst->param->reg->value);
 	if (param_type(read_value((*vm)->mem, codage, 1), 1, 11) == DIRI)
 		addr = lst->next->param->dir % IDX_MOD;
 	else if (param_type(read_value((*vm)->mem, codage, 1), 1, 11) == IND)
@@ -81,7 +81,7 @@ int		ft_sti(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 		addr += lst->next->next->param->dir % IDX_MOD;
 	else
 		addr += lst->next->next->param->reg->value % IDX_MOD;
-	printf("write %d\n", lst->param->reg->value);
+	ft_printf("write %d\n", lst->param->reg->value);
 	write_value(&((*vm)->mem), lst->param->reg->value, addr, (*proc)->champ);
 	ft_putendl("---fin sti---");
 //	ft_print_mem((*vm)->mem);

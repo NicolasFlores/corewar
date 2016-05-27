@@ -6,7 +6,7 @@
 /*   By: nflores <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 11:41:05 by nflores           #+#    #+#             */
-/*   Updated: 2016/05/27 13:04:21 by nflores          ###   ########.fr       */
+/*   Updated: 2016/05/27 14:23:44 by nflores          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,11 @@ int						param_size(t_partype par);
 int						nb_cycles(int opc);
 void					set_param(t_mem *mem, t_param *param, t_partype par,
 								t_proc *proc);
+t_param					*init_param(void);
+void					reset_param(t_param_list **lst);
+t_param_list			*ft_param_lstnew(void);
+void					ft_param_lstadd(t_param_list **lst, t_param_list *new);
+void					ft_free_parlst(t_param_list **lst);
 
 //debug
 

@@ -6,7 +6,7 @@
 /*   By: nflores <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/18 15:21:30 by nflores           #+#    #+#             */
-/*   Updated: 2016/05/27 13:11:01 by nflores          ###   ########.fr       */
+/*   Updated: 2016/05/27 15:20:22 by nflores          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,42 +15,6 @@
 int			(*g_opcode[])(t_vm **, t_param_list *, int, t_proc **) = {
 	ft_live, ft_ld, ft_st, ft_add, ft_sub, ft_and, ft_or, ft_xor, ft_zjmp,
 	ft_ldi, ft_sti, ft_fork, ft_lld, ft_lldi, ft_lfork, ft_aff};
-
-t_param		*init_param(void)
-{
-	t_param *ret;
-
-	ret = (t_param *)malloc(sizeof(t_param *));
-	if (!ret)
-		exit(write(2, "Malloc error\n", 13));
-	ret->reg = NULL;
-	ret->ind = 0;
-	ret->dir = 0;
-	return (ret);
-}
-
-t_param_list	*ft_param_lstnew(void)
-{
-	t_param_list *ret;
-
-	ret = (t_param_list *)malloc(sizeof(t_param_list));
-	if (!ret)
-		exit(write(2, "Malloc error\n", 13));
-	ret->param = init_param();
-	ret->next = NULL;
-	return (ret);
-}
-
-void		ft_param_lstadd(t_param_list **lst, t_param_list *new)
-{
-	t_param_list *tmp;
-
-	tmp = *lst;
-	if (tmp)
-		while (tmp->next)
-			tmp = tmp->next;
-	tmp->next = new;
-}
 
 t_proc		*init_proc(t_champ *champ)
 {
@@ -79,21 +43,6 @@ t_proc		*init_proc(t_champ *champ)
 	return (ret);
 }
 
-
-void		reset_param(t_param_list **lst)
-{
-	t_param_list *tmp;
-
-	tmp = *lst;
-	while (tmp)
-	{
-		tmp->param->reg = NULL;
-		tmp->param->ind = 0;
-		tmp->param->dir = 0;
-		tmp = tmp->next;
-	}
-}
-
 void		kill_proc(t_vm **vm, t_proc **exec_proc)
 {
 	int i;
@@ -106,6 +55,7 @@ void		kill_proc(t_vm **vm, t_proc **exec_proc)
 	{
 		if (exec_proc[i]->live == 0)
 		{
+			ft_free_parlst(&(exec_proc[i]->par_list));
 			free(exec_proc[i]);
 			exec_proc[i] = NULL;
 			(*vm)->proc--;
@@ -138,13 +88,12 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 {
 	t_proc		*exec_proc[vm->proc];
 	t_param_list	*tmp;
-	int			i, j;
-	int			opc[vm->proc], wex[vm->proc];
-	int			codage[vm->proc];
+	int			i, j, k;
+	int			opc[vm->proc], wex[vm->proc], codage[vm->proc];
 	t_partype	par;
 	t_champ_list *tmp2;
 
-	ft_print_mem(vm->mem);
+//	ft_print_mem(vm->mem);
 	i = 0;
 	tmp2 = champ_list;
 	while (i < vm->proc)
@@ -161,7 +110,7 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 //		ft_printf("---cycle %d---\n", vm->cycles);
 		if (vm->cycles == vm->ctd)
 		{
-			ft_printf("---cycle %d -> kill---\n", vm->cycles);
+//			ft_printf("---cycle %d -> kill---\n", vm->cycles);
 			kill_proc(&vm, exec_proc);
 			if (vm->live >= 21)
 			{ 
@@ -212,7 +161,7 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 					}
 					j--;
 					tmp = tmp->next;
-					ft_printf("cycle %d opc = %d par size = %d partype = %d\n", vm->cycles, opc[i], param_size(par), par);
+//					ft_printf("cycle %d pc = %d opc = %d codage = %d(%d) parsize = %d partype = %d\n", vm->cycles, exec_proc[i]->pc, opc[i], codage[i], read_value(vm->mem, codage[i], 1), param_size(par), par);
 					exec_proc[i]->pc += param_size(par);
 				}
 				wex[i] = vm->cycles + nb_cycles(opc[i]);
@@ -221,21 +170,28 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 				exec_proc[i]->pc++;
 			if (vm->cycles != 0 && vm->cycles == wex[i])
 			{
-				ft_printf("<<<cycle %d>>>\nopc = %d champ %d pc = %d\n", vm->cycles, opc[i], i + 1, exec_proc[i]->pc);
+//				ft_printf("<<<cycle %d>>>\nopc = %d champ %d pc = %d\n", vm->cycles, opc[i], i + 1, exec_proc[i]->pc);
 				g_opcode[opc[i] - 1](&vm, exec_proc[i]->par_list, codage[i], &(exec_proc[i]));
 				exec_proc[i]->exec = 1;
 				reset_param(&(exec_proc[i]->par_list));
 				opc[i] = 0;
-				ft_putendl("<<<>>>");
+//				ft_putendl("<<<>>>");
 			}
 			i++;
 		}
+//		ft_printf("cycle = %d\n", vm->cycles);
 		vm->cycles++;
-	}
+/*		k = 1;
+		while (tmp)
+		{
+			ft_printf("list elem nb = %d\n", k);
+			k++;
+			tmp = tmp->next;
+		}
+*/	}
 	ft_print_mem(vm->mem);
-	while (champ_list->next && champ_list->champ->num * -1 != vm->last_live)
-		champ_list = champ_list->next;
-	ft_printf("le joueur %d(%s) a gagne\n", champ_list->champ->num,
-			champ_list->champ->name);
-	free(exec_proc[0]);
+//	while (champ_list->next && champ_list->champ->num * -1 != vm->last_live)
+//		champ_list = champ_list->next;
+//	ft_printf("le joueur %d(%s) a gagne\n", champ_list->champ->num,
+//			champ_list->champ->name);
 }

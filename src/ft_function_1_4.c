@@ -6,7 +6,7 @@
 /*   By: nflores <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/20 11:40:04 by nflores           #+#    #+#             */
-/*   Updated: 2016/05/27 12:59:18 by nflores          ###   ########.fr       */
+/*   Updated: 2016/05/27 14:44:29 by nflores          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ int		ft_ld(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 		lst->next->param->reg->value = read_value((*vm)->mem,
 										(*proc)->pc - val % IDX_MOD, REG_SIZE);
 	}
-	ft_printf("dir = %d regval = %d\n---fin ld---\n", lst->param->dir, lst->next->param->reg->value); 
+//	ft_printf("dir = %d regval = %d\n", lst->param->dir, lst->next->param->reg->value); 
+	ft_putendl("---fin ld---");
 	return (5);
 }
 
@@ -65,18 +66,17 @@ int		ft_st(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 //	ft_printf("ind = %d regval = %d\n", lst->next->param->ind, lst->param->reg->value);
 	addr = 0;
 	if (param_type(read_value((*vm)->mem, codage, 1), 1, 3) == REG)
-	{
-		ft_putendl("lol");
 		lst->next->param->reg->value = lst->param->reg->value;
-	}
 	else if (lst->next->param->ind >= 0)
 	{
-		addr = (*proc)->pc + lst->next->param->ind % IDX_MOD;
+//		ft_printf("stregval = %d\n", lst->param->reg->value);
+		addr = (*proc)->pc - 1 - IND_SIZE - T_REG + lst->next->param->ind % IDX_MOD;
+//		ft_printf("stregval = %d\n", lst->param->reg->value);
 		write_value(&((*vm)->mem), lst->param->reg->value, addr, (*proc)->champ);
 	}
 	else
 	{
-		addr = (*proc)->pc - (lst->next->param->ind * -1) % IDX_MOD;
+		addr = (*proc)->pc - 1 - IND_SIZE - T_REG - (lst->next->param->ind * -1) % IDX_MOD;
 		write_value(&((*vm)->mem), lst->param->reg->value, addr, (*proc)->champ);
 	}
 //	ft_printf("ind = %d regval = %d\n", lst->next->param->ind, lst->param->reg->value);
