@@ -6,7 +6,7 @@
 /*   By: nflores <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/27 13:48:46 by nflores           #+#    #+#             */
-/*   Updated: 2016/05/27 14:22:38 by nflores          ###   ########.fr       */
+/*   Updated: 2016/05/27 17:05:28 by nflores          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ void			ft_param_lstadd(t_param_list **lst, t_param_list *new)
 			tmp = tmp->next;
 	tmp->next = new;
 }
-
 
 void			ft_free_parlst(t_param_list **lst)
 {
