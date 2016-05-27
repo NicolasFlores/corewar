@@ -6,7 +6,7 @@
 /*   By: nflores <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 11:41:05 by nflores           #+#    #+#             */
-/*   Updated: 2016/05/27 14:23:44 by nflores          ###   ########.fr       */
+/*   Updated: 2016/05/27 17:06:12 by nflores          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,12 @@ typedef struct			s_proc
 	int					exec;
 }						t_proc;
 
+typedef struct			s_proc_list
+{
+	t_proc				*proc;
+	struct s_proc_list	*next;
+}						t_proc_list;
+
 typedef enum			e_partype
 {
 	NUL,
@@ -154,7 +160,8 @@ int						ft_lfork(t_vm **vm, t_param_list *lst,
 int						ft_aff(t_vm **vm, t_param_list *lst, int codage,
 							t_proc **proc);
 int						read_value(t_mem *mem, int addr, int size);
-void					write_value(t_mem **mem, int value, int addr, t_champ *champ);
+void					write_value(t_mem **mem, int value, int addr,
+									t_champ *champ);
 int						is_opcode(char oct);
 int						nb_param(int opc);
 t_partype				param_type(char oct, int num, int opc);
@@ -168,8 +175,10 @@ t_param_list			*ft_param_lstnew(void);
 void					ft_param_lstadd(t_param_list **lst, t_param_list *new);
 void					ft_free_parlst(t_param_list **lst);
 
-//debug
+/*
+** debug
+*/
 
-void	ft_print_mem(t_mem *mem);
+void					ft_print_mem(t_mem *mem);
 
 #endif
