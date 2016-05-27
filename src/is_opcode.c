@@ -6,7 +6,7 @@
 /*   By: nflores <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/24 11:45:24 by nflores           #+#    #+#             */
-/*   Updated: 2016/05/25 16:50:38 by nflores          ###   ########.fr       */
+/*   Updated: 2016/05/27 10:34:04 by nflores          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int			nb_param(int opc)
 	return (3);
 }
 
-t_partype	param_type(char oct, int num)
+t_partype	param_type(char oct, int num, int opc)
 {
 	t_partype	ret;
 
@@ -35,7 +35,13 @@ t_partype	param_type(char oct, int num)
 	if (oct == 1)
 		ret = REG;
 	else if (oct == 2)
-		ret = DIR;
+	{
+		if (opc == 9 || opc == 10 || opc == 11 || opc == 12 ||
+			opc == 14 || opc == 15)
+			ret = DIRI;
+		else
+			ret = DIR;
+	}
 	else if (oct == 3)
 		ret = IND;
 	return (ret);
@@ -45,6 +51,8 @@ int			param_size(t_partype par)
 {
 	if (par == REG)
 		return (T_REG);
+	else if (par == DIRI)
+		return (T_DIR);
 	else if (par == DIR)
 		return (DIR_SIZE);
 	else if (par == IND)

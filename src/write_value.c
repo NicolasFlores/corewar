@@ -6,7 +6,7 @@
 /*   By: nflores <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/20 14:37:26 by nflores           #+#    #+#             */
-/*   Updated: 2016/05/25 10:30:59 by nflores          ###   ########.fr       */
+/*   Updated: 2016/05/27 10:55:03 by nflores          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	write_value(t_mem **mem, int value, int addr, t_champ *champ)
 	t_mem	*tmp;
 	int		i;
 
+//	ft_print_mem(*mem);
 	i = 0;
 	tmp = *mem;
 	if (i <= addr)
@@ -42,6 +43,7 @@ void	write_value(t_mem **mem, int value, int addr, t_champ *champ)
 		tmp = tmp->next;
 		i--;
 	}
+//	ft_print_mem(*mem);
 }
 
 int		read_value(t_mem *mem, int addr, int size)

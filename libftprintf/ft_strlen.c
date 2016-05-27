@@ -6,7 +6,7 @@
 /*   By: nflores <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 11:42:58 by nflores           #+#    #+#             */
-/*   Updated: 2015/11/26 14:08:52 by nflores          ###   ########.fr       */
+/*   Updated: 2016/05/26 14:39:19 by nflores          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,7 @@ size_t		ft_strlen(const char *s)
 	size_t	ret;
 
 	ret = 0;
-	while (*s != '\0')
-	{
+	while (s[ret] != '\0')
 		ret++;
-		s++;
-	}
 	return (ret);
 }

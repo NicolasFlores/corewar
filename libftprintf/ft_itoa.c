@@ -6,7 +6,7 @@
 /*   By: nflores <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/25 15:17:00 by nflores           #+#    #+#             */
-/*   Updated: 2016/01/26 15:21:58 by nflores          ###   ########.fr       */
+/*   Updated: 2016/05/26 14:37:55 by nflores          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static char	*ft_itoa_o(long int n)
 
 	i = 0;
 	nb = n;
-	ret = (char *)malloc(sizeof(char) * ft_nbchar(n) + 1);
+	ret = (char *)malloc(sizeof(char) * (ft_nbchar(nb) + 1));
 	if (!ret)
 		return (NULL);
 	if (n < 0)
