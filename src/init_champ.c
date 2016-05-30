@@ -6,7 +6,7 @@
 /*   By: nflores <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/12 15:01:40 by nflores           #+#    #+#             */
-/*   Updated: 2016/05/20 11:24:56 by nflores          ###   ########.fr       */
+/*   Updated: 2016/05/30 13:19:51 by nflores          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	init_champ(char **argv, int i, t_champ_list **champ_list, t_opt *opt)
 		(0x000000ff & file[PROG_NAME_LENGTH + sizeof(int) * 2 + 3]);
 	tmp = ft_newchamp(file + sizeof(int), file + sizeof(int) * 3 +
 					PROG_NAME_LENGTH, oct, pr_size);
-	tmp->reg[0].value = -(i - opt->opt_n * 2 - opt->opt_d * 2);
+	tmp->reg[0] = -(i - opt->opt_n * 2 - opt->opt_d * 2);
 	tmp->num = i - opt->opt_n * 2 - opt->opt_d * 2;
 	j = 0;
 	while (j < tmp->prog_size)

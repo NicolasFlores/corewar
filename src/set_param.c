@@ -6,7 +6,7 @@
 /*   By: nflores <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/24 12:53:05 by nflores           #+#    #+#             */
-/*   Updated: 2016/05/27 13:55:58 by nflores          ###   ########.fr       */
+/*   Updated: 2016/05/30 16:22:42 by nflores          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,15 @@
 
 void	set_param(t_mem *mem, t_param *param, t_partype par, t_proc *proc)
 {
-	t_reg	reg;
+	int rv;
 
 	if (par == REG)
 	{
-		reg = proc->champ->reg[read_value(mem, proc->pc + 1, T_REG) - 1];
-//		ft_printf("reg[%d] = %d\n", read_value(mem, proc->pc + 1, T_REG) - 1, reg.value);
-		param->reg = &reg;
+		rv = read_value(mem, proc->pc + 1, T_REG) % 16;
+		if (rv == 0)
+			rv = 16;
+//		ft_printf("r%d = %d\n", rv, proc->champ->reg[rv - 1]);
+		param->reg = &(proc->champ->reg[rv - 1]);
 	}
 	else if (par == IND)
 	{

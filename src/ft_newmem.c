@@ -6,7 +6,7 @@
 /*   By: nflores <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/17 10:36:54 by nflores           #+#    #+#             */
-/*   Updated: 2016/05/26 10:19:53 by nflores          ###   ########.fr       */
+/*   Updated: 2016/05/30 13:20:44 by nflores          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,8 @@ void		ft_gameinit(t_mem **mem, t_champ_list *lst, int nb_champ)
 			if (j == 0)
 				lst->champ->pc = tmp->n;
 			tmp->oct = lst->champ->prog[j];
-			tmp->champ_own = lst->champ->reg[0].value;
-			tmp->champ_wr = lst->champ->reg[0].value;
+			tmp->champ_own = lst->champ->reg[0];
+			tmp->champ_wr = lst->champ->reg[0];
 			j++;
 			tmp = tmp->next;
 		}

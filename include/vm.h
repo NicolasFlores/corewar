@@ -6,7 +6,7 @@
 /*   By: nflores <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/10 11:41:05 by nflores           #+#    #+#             */
-/*   Updated: 2016/05/27 17:06:12 by nflores          ###   ########.fr       */
+/*   Updated: 2016/05/30 15:48:02 by nflores          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ typedef struct			s_champ
 	int					num;
 	int					total_size;
 	int					prog_size;
-	t_reg				reg[REG_NUMBER];
+	int					reg[REG_NUMBER];
 }						t_champ;
 
 typedef struct			s_champ_list
@@ -76,7 +76,7 @@ typedef struct			s_vm
 
 typedef struct			s_param
 {
-	t_reg				*reg;
+	int					*reg;
 	int					dir;
 	int					ind;
 }						t_param;
@@ -91,6 +91,7 @@ typedef struct			s_proc
 {
 	t_champ				*champ;
 	t_param_list		*par_list;
+	int					num;
 	int					pc;
 	int					live;
 	int					size;
@@ -169,11 +170,15 @@ int						param_size(t_partype par);
 int						nb_cycles(int opc);
 void					set_param(t_mem *mem, t_param *param, t_partype par,
 								t_proc *proc);
+int						ft_codage_valid(int opc, int codage);
 t_param					*init_param(void);
 void					reset_param(t_param_list **lst);
 t_param_list			*ft_param_lstnew(void);
 void					ft_param_lstadd(t_param_list **lst, t_param_list *new);
 void					ft_free_parlst(t_param_list **lst);
+t_proc_list				*ft_proc_lstnew(t_proc *proc);
+void					ft_proc_lstadd(t_proc_list **lst, t_proc_list *new);
+void					ft_remove_proc(t_proc_list **lst, int n);
 
 /*
 ** debug
