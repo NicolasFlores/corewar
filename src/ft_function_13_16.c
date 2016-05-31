@@ -67,7 +67,6 @@ void	*ft_lfork(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 
 	fork = init_proc((*proc)->champ, (*vm)->proc);
 	fork->pc = (*proc)->pc - DIR_SIZE + lst->param->dir;
-	fork->ipc = fork->pc;
 	(*vm)->proc++;
 	return (fork);
 }

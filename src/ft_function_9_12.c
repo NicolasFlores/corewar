@@ -14,10 +14,13 @@
 
 void	*ft_zjmp(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 {
-	if (lst->param->dir >= 0)
-		(*proc)->pc -= DIR_SIZE + lst->param->dir % IDX_MOD;
-	else
-		(*proc)->pc -= DIR_SIZE - (lst->param->dir * -1) % IDX_MOD;
+	if ((*proc)->champ->carry)
+	{
+		if (lst->param->dir >= 0)
+			(*proc)->pc = (*proc)->pc - T_DIR + lst->param->dir % IDX_MOD;
+		else
+			(*proc)->pc = (*proc)->pc - T_DIR - (lst->param->dir * -1) % IDX_MOD;
+	}
 	if ((*proc)->champ->carry)
 		(*proc)->champ->carry = 0;
 	else
@@ -96,7 +99,6 @@ void	*ft_fork(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 
 	fork = init_proc((*proc)->champ, (*vm)->proc);
 	fork->pc = (*proc)->pc - DIR_SIZE + lst->param->dir % IDX_MOD;
-	fork->ipc = fork->pc;
 	(*vm)->proc++;
 	return (fork);
 }

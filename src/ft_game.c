@@ -37,7 +37,6 @@ t_proc		*init_proc(t_champ *champ, int n)
 	ret->champ = champ;
 	ret->num = n;
 	ret->pc = champ->pc;
-	ret->ipc = champ->pc;
 	ret->live = 0;
 	ret->size = champ->prog_size;
 	ret->exec = 1;
@@ -77,8 +76,9 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 {
 	t_proc_list		*exec_proc, *tmp3;
 	t_param_list	*tmp;
-	int			i, j, k, ctd;
-	int			opc[vm->proc], wex[vm->proc], codage[vm->proc];
+	int			i, j, k, l, ctd;
+	int			*opc, *wex, *codage;
+	int			*opc2, *wex2, *codage2;
 	t_partype	par;
 	t_champ_list *tmp2;
 
@@ -87,6 +87,11 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 	tmp2 = champ_list;
 	exec_proc = NULL;
 	ctd = CYCLE_TO_DIE;
+	opc = (int *)malloc(sizeof(int) * vm->proc);
+	wex = (int *)malloc(sizeof(int) * vm->proc);
+	codage = (int *)malloc(sizeof(int) * vm->proc);
+	if (!opc || !wex || !codage)
+		exit(write(2, "Malloc error\n", 13));
 	while (i < vm->proc)
 	{
 		if (!exec_proc)
@@ -168,12 +173,30 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 			if (vm->cycles != 0 && vm->cycles == wex[i])
 			{
 //				ft_printf("<<<cycle %d>>>\nopc = %d codage = %x champ %d pc = %d\n", vm->cycles, opc[i], read_value(vm->mem, codage[i], 1), i + 1, tmp3->proc->pc);
-				if (opc[i] == 1 || opc[i] == 9 || opc[i] == 12 || opc[i] == 15 ||
+				if (opc[i] == 1 || opc[i] == 9 ||
 					ft_codage_valid(opc[i], (char)read_value(vm->mem, codage[i], 1)))
 					g_opcode[opc[i] - 1](&vm, tmp3->proc->par_list, codage[i], &(tmp3->proc));
+				else if (opc[i] == 12 || opc[i] == 15)
+				{
+					ft_proc_lstadd(&exec_proc,
+								ft_proc_lstnew(g_opcode[opc[i] - 1](&vm, tmp3->proc->par_list, codage[i], &(tmp3->proc))));
+					opc2 = realloc(opc, sizeof(int) * vm->proc);
+					wex2 = realloc(wex, sizeof(int) * vm->proc);
+					codage2 = realloc(codage, sizeof(int) * vm->proc);
+					if (!opc2 || !wex2 || !codage2)
+						exit(write(2, "Realloc error\n", 14));
+					opc = opc2;
+					wex = wex2;
+					codage = codage2;
+					opc[vm->proc - 1] = 0;
+					wex[vm->proc - 1] = 0;
+					codage[vm->proc - 1] = 0;
+				}
 				tmp3->proc->exec = 1;
 				reset_param(&(tmp3->proc->par_list));
 				opc[i] = 0;
+				wex[i] = 0;
+				codage[i] = 0;
 //				ft_putendl("<<<>>>");
 			}
 			i++;
@@ -191,10 +214,14 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 		}
 */	}
 //	ft_printf("cycle = %d\n", vm->cycles);
-	ft_print_mem(vm->mem);
+//	ft_print_mem(vm->mem);
 //	ft_printf("live = %d\n", vm->last_live);
-	while (champ_list->next && champ_list->champ->num * -1 != vm->last_live)
-		champ_list = champ_list->next;
-	ft_printf("le joueur %d(%s) a gagne\n", champ_list->champ->num,
-			champ_list->champ->name);
+	tmp2 = champ_list;
+	while (tmp2->next && tmp2->champ->num * -1 != vm->last_live)
+		tmp2 = tmp2->next;
+	ft_printf("le joueur %d(%s) a gagne\n", tmp2->champ->num,
+			tmp2->champ->name);
+	free(opc);
+	free(wex);
+	free(codage);
 }

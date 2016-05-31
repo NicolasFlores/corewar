@@ -93,7 +93,6 @@ typedef struct			s_proc
 	t_param_list		*par_list;
 	int					num;
 	int					pc;
-	int					ipc;
 	int					live;
 	int					size;
 	int					exec;
@@ -181,6 +180,7 @@ t_proc					*init_proc(t_champ *champ, int n);
 t_proc_list				*ft_proc_lstnew(t_proc *proc);
 void					ft_proc_lstadd(t_proc_list **lst, t_proc_list *new);
 void					ft_remove_proc(t_proc_list **lst, int n);
+int						ft_proc_lstsize(t_proc_list *lst);
 
 /*
 ** debug

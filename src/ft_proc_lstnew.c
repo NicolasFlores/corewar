@@ -53,6 +53,20 @@ void		ft_remove_proc(t_proc_list **lst, int n)
 	if (tmp == *lst)
 		*lst = tmp->next;
 	tmp2->next = tmp->next;
+	ft_free_parlst(&(tmp->proc->par_list));
 	free(tmp->proc);
 	free(tmp);
+}
+
+int			ft_proc_lstsize(t_proc_list *lst)
+{
+	int ret;
+
+	ret = 0;
+	while (lst)
+	{
+		ret++;
+		lst = lst->next;
+	}
+	return (ret);
 }

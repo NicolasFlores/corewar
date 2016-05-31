@@ -1,3 +1,8 @@
 .name "tests"
 .comment "lol lol et relol on va tous vous n***** grace a segfault master"
-st r1, 78
+ld %12, r2
+add r1, r2, r3
+zjmp %-50
+	
+
+	
