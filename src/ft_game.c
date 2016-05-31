@@ -82,7 +82,6 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 	t_partype	par;
 	t_champ_list *tmp2;
 
-//	ft_print_mem(vm->mem);
 	i = 0;
 	tmp2 = champ_list;
 	exec_proc = NULL;
@@ -106,10 +105,8 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 	}
 	while (vm->proc)
 	{
-//		ft_printf("---cycle %d---\n", vm->cycles);
 		if (vm->cycles == vm->ctd)
 		{
-//			ft_printf("---cycle %d -> kill---\n", vm->cycles);
 			kill_proc(&vm, &exec_proc);
 			if (vm->live >= 21)
 			{
@@ -128,7 +125,6 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 				vm->ctd += ctd;
 				vm->check++;
 			}
-//			ft_putendl("---fin kill---");
 		}
 		i = 0;
 		tmp3 = exec_proc;
@@ -138,7 +134,6 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 				opc[i] = read_value(vm->mem, tmp3->proc->pc + 1, 1);
 			if (tmp3->proc->exec && is_opcode(opc[i]))
 			{
-//				ft_printf("cycle %d champion %d oct = %d opc = %d\n", vm->cycles, i + 1, tmp3->proc->pc, opc[i]);
 				if (opc[i] == 1 || opc[i] == 9 || opc[i] == 12 || opc[i] == 15)
 					tmp3->proc->pc++;
 				else
@@ -162,7 +157,6 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 							break ;
 						j--;
 						tmp = tmp->next;
-//						ft_printf("cycle %d pc = %d opc = %d codage = %d(%d) parsize = %d partype = %d\n", vm->cycles, tmp3->proc->pc, opc[i], codage[i], read_value(vm->mem, codage[i], 1), param_size(par), par);
 						tmp3->proc->pc += param_size(par);
 					}
 				wex[i] = vm->cycles + nb_cycles(opc[i]);
@@ -172,7 +166,6 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 				tmp3->proc->pc++;
 			if (vm->cycles != 0 && vm->cycles == wex[i])
 			{
-//				ft_printf("<<<cycle %d>>>\nopc = %d codage = %x champ %d pc = %d\n", vm->cycles, opc[i], read_value(vm->mem, codage[i], 1), i + 1, tmp3->proc->pc);
 				if (opc[i] == 1 || opc[i] == 9 ||
 					ft_codage_valid(opc[i], (char)read_value(vm->mem, codage[i], 1)))
 					g_opcode[opc[i] - 1](&vm, tmp3->proc->par_list, codage[i], &(tmp3->proc));
@@ -197,25 +190,12 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 				opc[i] = 0;
 				wex[i] = 0;
 				codage[i] = 0;
-//				ft_putendl("<<<>>>");
 			}
 			i++;
 			tmp3 = tmp3->next;
 		}
-//		ft_printf("cycle = %d\n", vm->cycles);
 		vm->cycles++;
-//		ft_printf("proc = %d\n", vm->proc);
-/*		k = 1;
-		while (tmp)
-		{
-			ft_printf("list elem nb = %d\n", k);
-			k++;
-			tmp = tmp->next;
-		}
-*/	}
-//	ft_printf("cycle = %d\n", vm->cycles);
-//	ft_print_mem(vm->mem);
-//	ft_printf("live = %d\n", vm->last_live);
+	}
 	tmp2 = champ_list;
 	while (tmp2->next && tmp2->champ->num * -1 != vm->last_live)
 		tmp2 = tmp2->next;

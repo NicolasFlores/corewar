@@ -17,7 +17,6 @@ void	write_value(t_mem **mem, int value, int addr, t_champ *champ)
 	t_mem	*tmp;
 	int		i;
 
-//	ft_print_mem(*mem);
 	i = 0;
 	tmp = *mem;
 	if (addr >= 0)
@@ -43,7 +42,6 @@ void	write_value(t_mem **mem, int value, int addr, t_champ *champ)
 		tmp = tmp->next;
 		i--;
 	}
-//	ft_print_mem(*mem);
 }
 
 int		read_value(t_mem *mem, int addr, int size)
