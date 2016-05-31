@@ -23,33 +23,30 @@ t_mem		*ft_newmem(int n)
 	ret->n = n;
 	ret->champ_own = 0;
 	ret->champ_wr = 0;
-	ret->prev = NULL;
-	ret->next = NULL;
+	ret->prev = ret;
+	ret->next = ret;
 	return (ret);
 }
 
 void		ft_meminit(t_mem **mem, int size)
 {
 	t_mem	*tmp;
-	t_mem	*tmp2;
+	t_mem	*new;
 	int		i;
 
 	i = 0;
 	*mem = ft_newmem(0);
 	tmp = *mem;
-	tmp2 = NULL;
-	while (i < size)
+	while (i < size - 1)
 	{
-		tmp->next = ft_newmem(i + 1);
-		tmp->prev = tmp2;
-		tmp2 = tmp;
+		new = ft_newmem(i + 1);
+		new->prev = tmp;
+		new->next = tmp->next;
+		tmp->next->prev = new;
+		tmp->next = new;
 		tmp = tmp->next;
 		i++;
 	}
-	(*mem)->prev = tmp;
-	tmp->next = *mem;
-	tmp = NULL;
-	tmp2 = NULL;
 }
 
 void		ft_gameinit(t_mem **mem, t_champ_list *lst, int nb_champ)

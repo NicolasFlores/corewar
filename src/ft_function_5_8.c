@@ -12,7 +12,7 @@
 
 #include "../include/vm.h"
 
-int		ft_sub(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
+void	*ft_sub(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 {
 	if (param_type(read_value((*vm)->mem, codage, 1), 0, 5) == REG)
 		*(lst->next->next->param->reg) = *(lst->param->reg) - *(lst->next->param->reg);
@@ -20,14 +20,20 @@ int		ft_sub(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 		(*proc)->champ->carry = 0;
 	else
 		(*proc)->champ->carry = 1;
-	return (10);
+	return (NULL);
 }
 
-int		ft_and(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
+void	*ft_and(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 {
 	int val1;
 	int val2;
+	int size1;
+	int size2;
+	int size3;
 
+	size1 = param_size(param_type(read_value((*vm)->mem, codage, 1), 0, 6));
+	size2 = param_size(param_type(read_value((*vm)->mem, codage, 1), 1, 6));
+	size3 = param_size(param_type(read_value((*vm)->mem, codage, 1), 2, 6));
 	if (param_type(read_value((*vm)->mem, codage, 1), 0, 6) == REG)
 		val1 = *(lst->param->reg);
 	else if (param_type(read_value((*vm)->mem, codage, 1), 0, 6) == DIR)
@@ -35,9 +41,9 @@ int		ft_and(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	else
 	{
 		if (lst->param->ind >= 0)
-			val1 = read_value((*vm)->mem, (*proc)->pc + lst->param->ind % IDX_MOD, REG_SIZE);
+			val1 = read_value((*vm)->mem, (*proc)->pc - 1 - size1 - size2 - size3 + lst->param->ind % IDX_MOD, REG_SIZE);
 		else
-			val1 = read_value((*vm)->mem, (*proc)->pc - (lst->param->ind * -1) % IDX_MOD, REG_SIZE);
+			val1 = read_value((*vm)->mem, (*proc)->pc - 1 - size1- size2 - size3 - (lst->param->ind * -1) % IDX_MOD, REG_SIZE);
 	}
 	if (param_type(read_value((*vm)->mem, codage, 1), 1, 6) == REG)
 		val2 = *(lst->next->param->reg);
@@ -46,23 +52,29 @@ int		ft_and(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	else
 	{
 		if (lst->next->param->ind >= 0)
-			val2 = read_value((*vm)->mem, (*proc)->pc + lst->next->param->ind % IDX_MOD, REG_SIZE);
+			val2 = read_value((*vm)->mem, (*proc)->pc - 1 - size1 - size2 - size3 + lst->next->param->ind % IDX_MOD, REG_SIZE);
 		else
-			val2 = read_value((*vm)->mem, (*proc)->pc - (lst->next->param->ind * -1) % IDX_MOD, REG_SIZE);
+			val2 = read_value((*vm)->mem, (*proc)->pc - 1 - size1 - size2 - size3 - (lst->next->param->ind * -1) % IDX_MOD, REG_SIZE);
 	}
 	*(lst->next->next->param->reg) = val1 & val2;
 	if ((*proc)->champ->carry)
 		(*proc)->champ->carry = 0;
 	else
 		(*proc)->champ->carry = 1;
-	return (6);
+	return (NULL);
 }
 
-int		ft_or(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
+void	*ft_or(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 {
 	int val1;
 	int val2;
+	int size1;
+	int size2;
+	int size3;
 
+	size1 = param_size(param_type(read_value((*vm)->mem, codage, 1), 0, 7));
+	size2 = param_size(param_type(read_value((*vm)->mem, codage, 1), 1, 7));
+	size3 = param_size(param_type(read_value((*vm)->mem, codage, 1), 2, 7));
 	if (param_type(read_value((*vm)->mem, codage, 1), 0, 7) == REG)
 		val1 = *(lst->param->reg);
 	else if (param_type(read_value((*vm)->mem, codage, 1), 0, 7) == DIR)
@@ -70,9 +82,9 @@ int		ft_or(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	else
 	{
 		if (lst->param->ind >= 0)
-			val1 = read_value((*vm)->mem, (*proc)->pc + lst->param->ind % IDX_MOD, REG_SIZE);
+			val1 = read_value((*vm)->mem, (*proc)->pc - 1 - size1 - size2 - size3 + lst->param->ind % IDX_MOD, REG_SIZE);
 		else
-			val1 = read_value((*vm)->mem, (*proc)->pc - (lst->param->ind * -1) % IDX_MOD, REG_SIZE);
+			val1 = read_value((*vm)->mem, (*proc)->pc - 1 - size1 - size2 - size3 - (lst->param->ind * -1) % IDX_MOD, REG_SIZE);
 	}
 	if (param_type(read_value((*vm)->mem, codage, 1), 1, 7) == REG)
 		val2 = *(lst->next->param->reg);
@@ -81,23 +93,29 @@ int		ft_or(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	else
 	{
 		if (lst->next->param->ind >= 0)
-			val2 = read_value((*vm)->mem, (*proc)->pc + lst->next->param->ind % IDX_MOD, REG_SIZE);
+			val2 = read_value((*vm)->mem, (*proc)->pc - 1 - size1 - size2 - size3 + lst->next->param->ind % IDX_MOD, REG_SIZE);
 		else
-			val2 = read_value((*vm)->mem, (*proc)->pc + (lst->next->param->ind * -1) % IDX_MOD, REG_SIZE);
+			val2 = read_value((*vm)->mem, (*proc)->pc - 1 - size1 - size2 - size3 - (lst->next->param->ind * -1) % IDX_MOD, REG_SIZE);
 	}
 	*(lst->next->next->param->reg) = val1 | val2;
 	if ((*proc)->champ->carry)
 		(*proc)->champ->carry = 0;
 	else
 		(*proc)->champ->carry = 1;
-	return (6);
+	return (NULL);
 }
 
-int		ft_xor(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
+void	*ft_xor(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 {
 	int val1;
 	int val2;
+	int size1;
+	int size2;
+	int size3;
 
+	size1 = param_size(param_type(read_value((*vm)->mem, codage, 1), 0, 8));
+	size2 = param_size(param_type(read_value((*vm)->mem, codage, 1), 1, 8));
+	size3 = param_size(param_type(read_value((*vm)->mem, codage, 1), 2, 8));
 	if (param_type(read_value((*vm)->mem, codage, 1), 0, 8) == REG)
 		val1 = *(lst->param->reg);
 	else if (param_type(read_value((*vm)->mem, codage, 1), 0, 8) == DIR)
@@ -105,9 +123,9 @@ int		ft_xor(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	else
 	{
 		if (lst->param->ind >= 0)
-			val1 = read_value((*vm)->mem, (*proc)->pc + lst->param->ind % IDX_MOD, REG_SIZE);
+			val1 = read_value((*vm)->mem, (*proc)->pc - 1 - size1 - size2 - size3 + lst->param->ind % IDX_MOD, REG_SIZE);
 		else
-			val1 = read_value((*vm)->mem, (*proc)->pc - (lst->param->ind * -1) % IDX_MOD, REG_SIZE);
+			val1 = read_value((*vm)->mem, (*proc)->pc - 1 - size1 - size2 - size3 - (lst->param->ind * -1) % IDX_MOD, REG_SIZE);
 	}
 	if (param_type(read_value((*vm)->mem, codage, 1), 1, 8) == REG)
 		val2 = *(lst->next->param->reg);
@@ -125,5 +143,5 @@ int		ft_xor(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 		(*proc)->champ->carry = 0;
 	else
 		(*proc)->champ->carry = 1;
-	return (6);
+	return (NULL);
 }

@@ -12,25 +12,25 @@
 
 #include "../include/vm.h"
 
-int		ft_codage_valid(int opc, int codage)
+int		ft_codage_valid(int opc, char codage)
 {
 	if (opc == 2 || opc == 13)
-		return (codage == 0x90 || codage == 0xd0);
+		return (codage == (char)0x90 || codage == (char)0xd0);
 	else if (opc == 3)
-		return (codage == 0x50 || codage ==0x70);
+		return (codage == (char)0x50 || codage == (char)0x70);
 	else if (opc == 4 || opc == 5)
-		return (codage == 0x54);
+		return (codage == (char)0x54);
 	else if (opc == 6 || opc == 7 || opc == 8)
-		return (codage == 0x54 || codage == 0x64 || codage == 0x74 ||
-				codage == 0x94 || codage == 0xa4 || codage == 0xb4 ||
-				codage == 0xd4 || codage == 0xe4 || codage == 0xf4);
+		return (codage == (char)0x54 || codage == (char)0x64 || codage == (char)0x74 ||
+				codage == (char)0x94 || codage == (char)0xa4 || codage == (char)0xb4 ||
+				codage == (char)0xd4 || codage == (char)0xe4 || codage == (char)0xf4);
 	else if (opc == 10 || opc == 14)
-		return (codage == 0x54 || codage == 0x64 || codage == 0x94 ||
-				codage == 0xa4 || codage == 0xd4 || codage == 0xe4);
+		return (codage == (char)0x54 || codage == (char)0x64 || codage == (char)0x94 ||
+				codage == (char)0xa4 || codage == (char)0xd4 || codage == (char)0xe4);
 	else if (opc == 11)
-		return (codage == 0x54 || codage == 0x58 || codage == 0x64 ||
-				codage == 0x68 || codage == 0x74 || codage == 0x78);
+		return (codage == (char)0x54 || codage == (char)0x58 || codage == (char)0x64 ||
+				codage == (char)0x68 || codage == (char)0x74 || codage == (char)0x78);
 	else if (opc == 16)
-		return (codage == 0x40);
+		return (codage == (char)0x40);
 	return (0);
 }

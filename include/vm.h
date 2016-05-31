@@ -78,7 +78,7 @@ typedef struct			s_param
 {
 	int					*reg;
 	int					dir;
-	int					ind;
+	short				ind;
 }						t_param;
 
 typedef struct			s_param_list
@@ -93,6 +93,7 @@ typedef struct			s_proc
 	t_param_list		*par_list;
 	int					num;
 	int					pc;
+	int					ipc;
 	int					live;
 	int					size;
 	int					exec;
@@ -128,37 +129,37 @@ void					ft_gameinit(t_mem **mem, t_champ_list *lst,
 									int nb_champ);
 t_vm					*init_vm(t_mem *mem, t_champ_list *lst);
 void					ft_game(t_vm *vm, t_champ_list *champ_list);
-int						ft_live(t_vm **vm, t_param_list *lst, int codage,
+void					*ft_live(t_vm **vm, t_param_list *lst, int codage,
 								t_proc **proc);
-int						ft_ld(t_vm **vm, t_param_list *lst, int codage,
+void					*ft_ld(t_vm **vm, t_param_list *lst, int codage,
 							t_proc **proc);
-int						ft_st(t_vm **vm, t_param_list *lst, int codage,
+void					*ft_st(t_vm **vm, t_param_list *lst, int codage,
 							t_proc **proc);
-int						ft_add(t_vm **vm, t_param_list *lst, int codage,
+void					*ft_add(t_vm **vm, t_param_list *lst, int codage,
 							t_proc **proc);
-int						ft_sub(t_vm **vm, t_param_list *lst, int codage,
+void					*ft_sub(t_vm **vm, t_param_list *lst, int codage,
 							t_proc **proc);
-int						ft_and(t_vm **vm, t_param_list *lst, int codage,
+void					*ft_and(t_vm **vm, t_param_list *lst, int codage,
 							t_proc **proc);
-int						ft_or(t_vm **vm, t_param_list *lst, int codage,
+void					*ft_or(t_vm **vm, t_param_list *lst, int codage,
 							t_proc **proc);
-int						ft_xor(t_vm **vm, t_param_list *lst, int codage,
+void					*ft_xor(t_vm **vm, t_param_list *lst, int codage,
 							t_proc **proc);
-int						ft_zjmp(t_vm **vm, t_param_list *lst, int codage,
+void					*ft_zjmp(t_vm **vm, t_param_list *lst, int codage,
 								t_proc **proc);
-int						ft_ldi(t_vm **vm, t_param_list *lst, int codage,
+void					*ft_ldi(t_vm **vm, t_param_list *lst, int codage,
 							t_proc **proc);
-int						ft_sti(t_vm **vm, t_param_list *lst, int codage,
+void					*ft_sti(t_vm **vm, t_param_list *lst, int codage,
 							t_proc **proc);
-int						ft_fork(t_vm **vm, t_param_list *lst, int codage,
+void					*ft_fork(t_vm **vm, t_param_list *lst, int codage,
 								t_proc **proc);
-int						ft_lld(t_vm **vm, t_param_list *lst, int codage,
+void					*ft_lld(t_vm **vm, t_param_list *lst, int codage,
 							t_proc **proc);
-int						ft_lldi(t_vm **vm, t_param_list *lst, int codage,
+void					*ft_lldi(t_vm **vm, t_param_list *lst, int codage,
 								t_proc **proc);
-int						ft_lfork(t_vm **vm, t_param_list *lst,
+void					*ft_lfork(t_vm **vm, t_param_list *lst,
 								int codage, t_proc **proc);
-int						ft_aff(t_vm **vm, t_param_list *lst, int codage,
+void					*ft_aff(t_vm **vm, t_param_list *lst, int codage,
 							t_proc **proc);
 int						read_value(t_mem *mem, int addr, int size);
 void					write_value(t_mem **mem, int value, int addr,
@@ -170,12 +171,13 @@ int						param_size(t_partype par);
 int						nb_cycles(int opc);
 void					set_param(t_mem *mem, t_param *param, t_partype par,
 								t_proc *proc);
-int						ft_codage_valid(int opc, int codage);
+int						ft_codage_valid(int opc, char codage);
 t_param					*init_param(void);
 void					reset_param(t_param_list **lst);
 t_param_list			*ft_param_lstnew(void);
 void					ft_param_lstadd(t_param_list **lst, t_param_list *new);
 void					ft_free_parlst(t_param_list **lst);
+t_proc					*init_proc(t_champ *champ, int n);
 t_proc_list				*ft_proc_lstnew(t_proc *proc);
 void					ft_proc_lstadd(t_proc_list **lst, t_proc_list *new);
 void					ft_remove_proc(t_proc_list **lst, int n);
@@ -185,5 +187,8 @@ void					ft_remove_proc(t_proc_list **lst, int n);
 */
 
 void					ft_print_mem(t_mem *mem);
+void					ft_print_memn(t_mem *mem);
+void					ft_print_rmemn(t_mem *mem);
+
 
 #endif

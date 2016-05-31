@@ -18,17 +18,16 @@ void	write_value(t_mem **mem, int value, int addr, t_champ *champ)
 	int		i;
 
 //	ft_print_mem(*mem);
-//	ft_printf("write : %d to addr : %d\n", value, addr);
 	i = 0;
 	tmp = *mem;
-	if (i <= addr)
+	if (addr >= 0)
 		while (i < addr - 1)
 		{
 			tmp = tmp->next;
 			i++;
 		}
 	else
-		while (i > addr + 1)
+		while (i > addr - 1)
 		{
 			tmp = tmp->prev;
 			i--;

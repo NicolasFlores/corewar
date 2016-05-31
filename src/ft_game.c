@@ -6,13 +6,13 @@
 /*   By: nflores <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/18 15:21:30 by nflores           #+#    #+#             */
-/*   Updated: 2016/05/30 17:02:16 by nflores          ###   ########.fr       */
+/*   Updated: 2016/05/30 17:55:36 by nflores          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/vm.h"
 
-int			(*g_opcode[])(t_vm **, t_param_list *, int, t_proc **) = {
+void		*(*g_opcode[])(t_vm **, t_param_list *, int, t_proc **) = {
 	ft_live, ft_ld, ft_st, ft_add, ft_sub, ft_and, ft_or, ft_xor, ft_zjmp,
 	ft_ldi, ft_sti, ft_fork, ft_lld, ft_lldi, ft_lfork, ft_aff};
 
@@ -37,6 +37,7 @@ t_proc		*init_proc(t_champ *champ, int n)
 	ret->champ = champ;
 	ret->num = n;
 	ret->pc = champ->pc;
+	ret->ipc = champ->pc;
 	ret->live = 0;
 	ret->size = champ->prog_size;
 	ret->exec = 1;
@@ -51,7 +52,7 @@ void		kill_proc(t_vm **vm, t_proc_list **exec_proc)
 	t_proc_list *tmp;
 	t_proc_list *tmp2;
 
-	i = 0;	
+	i = 0;
 	tpr = (*vm)->proc;
 	tmp = *exec_proc;
 	while (i < tpr && tmp)
@@ -166,9 +167,9 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 				tmp3->proc->pc++;
 			if (vm->cycles != 0 && vm->cycles == wex[i])
 			{
-//				ft_printf("<<<cycle %d>>>\nopc = %d champ %d pc = %d\n", vm->cycles, opc[i], i + 1, tmp3->proc->pc);
+//				ft_printf("<<<cycle %d>>>\nopc = %d codage = %x champ %d pc = %d\n", vm->cycles, opc[i], read_value(vm->mem, codage[i], 1), i + 1, tmp3->proc->pc);
 				if (opc[i] == 1 || opc[i] == 9 || opc[i] == 12 || opc[i] == 15 ||
-					ft_codage_valid(opc[i], read_value(vm->mem, codage[i], 1)))
+					ft_codage_valid(opc[i], (char)read_value(vm->mem, codage[i], 1)))
 					g_opcode[opc[i] - 1](&vm, tmp3->proc->par_list, codage[i], &(tmp3->proc));
 				tmp3->proc->exec = 1;
 				reset_param(&(tmp3->proc->par_list));
@@ -189,8 +190,8 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 			tmp = tmp->next;
 		}
 */	}
-	ft_printf("cycle = %d\n", vm->cycles);
-//	ft_print_mem(vm->mem);
+//	ft_printf("cycle = %d\n", vm->cycles);
+	ft_print_mem(vm->mem);
 //	ft_printf("live = %d\n", vm->last_live);
 	while (champ_list->next && champ_list->champ->num * -1 != vm->last_live)
 		champ_list = champ_list->next;
