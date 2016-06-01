@@ -21,7 +21,7 @@ void	set_param(t_mem *mem, t_param *param, t_partype par, t_proc *proc)
 		rv = read_value(mem, proc->pc + 1, T_REG) % 16;
 		if (rv == 0)
 			rv = 16;
-		param->reg = &(proc->champ->reg[rv - 1]);
+		param->reg = &(proc->reg[rv - 1]);
 	}
 	else if (par == IND)
 		param->ind = read_value(mem, proc->pc + 1, IND_SIZE);

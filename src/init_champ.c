@@ -30,13 +30,10 @@ void	init_champ(char **argv, int i, t_champ_list **champ_list, t_opt *opt)
 					PROG_NAME_LENGTH, oct, pr_size);
 	tmp->reg[0] = -(i - opt->opt_n * 2 - opt->opt_d * 2);
 	tmp->num = i - opt->opt_n * 2 - opt->opt_d * 2;
-	j = 0;
-	while (j < tmp->prog_size)
-	{
+	j = -1;
+	while (++j < tmp->prog_size)
 		(tmp->prog)[j] = file[sizeof(int) * 4 + PROG_NAME_LENGTH +
 							COMMENT_LENGTH + j];
-		j++;
-	}
 	if (*champ_list)
 		ft_champ_lstadd(champ_list, ft_champ_lstnew(tmp));
 	else

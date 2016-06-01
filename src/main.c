@@ -49,7 +49,7 @@ static void	free_mem(t_mem **mem)
 	tmp2 = NULL;
 }
 
-static void free_champ(t_champ **champ)
+static void	free_champ(t_champ **champ)
 {
 	free((*champ)->name);
 	free((*champ)->comment);

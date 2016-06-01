@@ -26,7 +26,6 @@ t_champ		*ft_newchamp(char *name, char *comment, int t_size, int pr_size)
 	if (!(ret->name) || !(ret->comment) || !(ret->prog))
 		exit(write(2, "Malloc Error\n", 13));
 	ret->pc = -1;
-	ret->carry = 0;
 	ret->total_size = t_size;
 	ret->prog_size = pr_size;
 	i = -1;

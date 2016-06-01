@@ -12,13 +12,13 @@
 
 #include "../include/vm.h"
 
-void	write_value(t_mem **mem, int value, int addr, t_champ *champ)
+t_mem	*set_oct(t_mem *mem, int addr)
 {
-	t_mem	*tmp;
 	int		i;
+	t_mem	*tmp;
 
 	i = 0;
-	tmp = *mem;
+	tmp = mem;
 	if (addr >= 0)
 		while (i < addr - 1)
 		{
@@ -31,6 +31,16 @@ void	write_value(t_mem **mem, int value, int addr, t_champ *champ)
 			tmp = tmp->prev;
 			i--;
 		}
+	return (tmp);
+}
+
+void	write_value(t_mem **mem, int value, int addr, t_champ *champ)
+{
+	t_mem	*tmp;
+	int		i;
+
+	i = 0;
+	tmp = set_oct(*mem, addr);
 	i = REG_SIZE;
 	while (i > 0)
 	{
@@ -44,10 +54,25 @@ void	write_value(t_mem **mem, int value, int addr, t_champ *champ)
 	}
 }
 
-int		read_value(t_mem *mem, int addr, int size)
+int		read_oct(t_mem *mem, int size)
 {
 	int i;
 	int ret;
+
+	i = size;
+	ret = 0;
+	while (i > 0)
+	{
+		ret += (mem->oct << ((i - 1) * 8)) & (0xff << ((i - 1) * 8));
+		i--;
+		mem = mem->next;
+	}
+	return (ret);
+}
+
+int		read_value(t_mem *mem, int addr, int size)
+{
+	int i;
 
 	i = 0;
 	if (i <= addr)
@@ -62,15 +87,7 @@ int		read_value(t_mem *mem, int addr, int size)
 			mem = mem->prev;
 			i--;
 		}
-	ret = 0;
 	if (size == 1)
 		return (mem->oct);
-	i = size;
-	while (i > 0)
-	{
-		ret += (mem->oct << ((i - 1) * 8)) & (0xff << ((i - 1) * 8));
-		i--;
-		mem = mem->next;
-	}
-	return (ret);
+	return (read_oct(mem, size));
 }

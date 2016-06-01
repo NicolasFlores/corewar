@@ -30,7 +30,6 @@ typedef struct			s_champ
 	char				*comment;
 	char				*prog;
 	int					pc;
-	int					carry;
 	int					num;
 	int					total_size;
 	int					prog_size;
@@ -67,6 +66,7 @@ typedef struct			s_vm
 	t_mem				*mem;
 	t_champ_list		*champ_list;
 	int					ctd;
+	int					cdelta;
 	int					cycles;
 	int					check;
 	int					live;
@@ -87,23 +87,6 @@ typedef struct			s_param_list
 	struct s_param_list	*next;
 }						t_param_list;
 
-typedef struct			s_proc
-{
-	t_champ				*champ;
-	t_param_list		*par_list;
-	int					num;
-	int					pc;
-	int					live;
-	int					size;
-	int					exec;
-}						t_proc;
-
-typedef struct			s_proc_list
-{
-	t_proc				*proc;
-	struct s_proc_list	*next;
-}						t_proc_list;
-
 typedef enum			e_partype
 {
 	NUL,
@@ -112,6 +95,28 @@ typedef enum			e_partype
 	DIRI,
 	IND
 }						t_partype;
+
+typedef struct			s_proc
+{
+	t_champ				*champ;
+	t_param_list		*par_list;
+	t_partype			par;
+	int					num;
+	int					pc;
+	int					live;
+	int					exec;
+	int					opc;
+	int					wex;
+	int					codage;
+	int					carry;
+	int					reg[REG_NUMBER];
+}						t_proc;
+
+typedef struct			s_proc_list
+{
+	t_proc				*proc;
+	struct s_proc_list	*next;
+}						t_proc_list;
 
 int						get_opt(t_opt **opt, int argc, char **argv);
 int						check_arg(char **buf, char *arg);
@@ -177,18 +182,10 @@ t_param_list			*ft_param_lstnew(void);
 void					ft_param_lstadd(t_param_list **lst, t_param_list *new);
 void					ft_free_parlst(t_param_list **lst);
 t_proc					*init_proc(t_champ *champ, int n);
+void					kill_proc(t_vm **vm, t_proc_list **exec_proc);
 t_proc_list				*ft_proc_lstnew(t_proc *proc);
 void					ft_proc_lstadd(t_proc_list **lst, t_proc_list *new);
 void					ft_remove_proc(t_proc_list **lst, int n);
 int						ft_proc_lstsize(t_proc_list *lst);
-
-/*
-** debug
-*/
-
-void					ft_print_mem(t_mem *mem);
-void					ft_print_memn(t_mem *mem);
-void					ft_print_rmemn(t_mem *mem);
-
 
 #endif

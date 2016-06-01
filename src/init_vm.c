@@ -22,6 +22,7 @@ t_vm	*init_vm(t_mem *mem, t_champ_list *lst)
 	ret->mem = mem;
 	ret->champ_list = lst;
 	ret->ctd = CYCLE_TO_DIE;
+	ret->cdelta = CYCLE_TO_DIE;
 	ret->cycles = 0;
 	ret->check = 0;
 	ret->live = 0;

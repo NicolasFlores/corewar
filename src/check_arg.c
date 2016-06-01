@@ -41,6 +41,25 @@ static int	read_arg(char **buf, int fd)
 	return (i);
 }
 
+void		display_error(char *arg, int errnum)
+{
+	if (errnum == 1)
+	{
+		write(2, arg, ft_strlen(arg));
+		exit(write(2, " is to small to be a champion\n", 30));
+	}
+	else if (errnum == 2)
+	{
+		write(2, arg, ft_strlen(arg));
+		exit(write(2, " is too large\n", 15));
+	}
+	else if (errnum == 3)
+	{
+		write(2, arg, ft_strlen(arg));
+		exit(write(2, " has an invalid header\n", 23));
+	}
+}
+
 int			check_arg(char **buf, char *arg)
 {
 	int		i;
@@ -49,25 +68,16 @@ int			check_arg(char **buf, char *arg)
 	fd = init_arg(buf, arg);
 	i = read_arg(buf, fd);
 	if (i < PROG_NAME_LENGTH + COMMENT_LENGTH)
-	{
-		write(2, arg, ft_strlen(arg));
-		exit(write(2, " is to small to be a champion\n", 30));
-	}
+		display_error(arg, 1);
 	if (((*buf)[PROG_NAME_LENGTH + sizeof(int) * 2] << 24 |
 		(0x00ff0000 & ((*buf)[PROG_NAME_LENGTH + sizeof(int) * 2 + 1] << 16)) |
 		(0x0000ff00 & ((*buf)[PROG_NAME_LENGTH + sizeof(int) * 2 + 2] << 8)) |
 		(0x000000ff & (*buf)[PROG_NAME_LENGTH + sizeof(int) * 2 + 3])) >
 		CHAMP_MAX_SIZE)
-	{
-		write(2, arg, ft_strlen(arg));
-		exit(write(2, " is too large\n", 15));
-	}
+		display_error(arg, 2);
 	if ((((*buf)[0] << 24) | (0x00ff0000 & ((*buf)[1] << 16)) |
 		(0x0000ff00 & ((*buf)[2] << 8)) | (0x000000ff & (*buf)[3])) !=
 		COREWAR_EXEC_MAGIC)
-	{
-		write(2, arg, ft_strlen(arg));
-		exit(write(2, " has an invalid header\n", 23));
-	}
+		display_error(arg, 3);
 	return (i);
 }

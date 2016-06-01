@@ -33,7 +33,7 @@ void	*ft_ld(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	int val;
 
 	val = 0;
-	if (param_type(read_value((*vm)->mem, codage, 1), 0, 2) == DIR)
+	if (param_type(codage, 0, 2) == DIR)
 	{
 		val = lst->param->dir;
 		*(lst->next->param->reg) = val;
@@ -50,6 +50,7 @@ void	*ft_ld(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 		*(lst->next->param->reg) = read_value((*vm)->mem,
 										(*proc)->pc - val % IDX_MOD, REG_SIZE);
 	}
+	(*proc)->carry = 1;
 	return (NULL);
 }
 
@@ -60,16 +61,18 @@ void	*ft_st(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 
 	val = *(lst->param->reg);
 	addr = 0;
-	if (param_type(read_value((*vm)->mem, codage, 1), 1, 3) == REG)
+	if (param_type(codage, 1, 3) == REG)
 		*(lst->next->param->reg) = *(lst->param->reg);
 	else if (lst->next->param->ind >= 0)
 	{
-		addr = (*proc)->pc - 1 - IND_SIZE - T_REG + lst->next->param->ind % IDX_MOD;
+		addr = (*proc)->pc - 1 - IND_SIZE - T_REG +
+				lst->next->param->ind % IDX_MOD;
 		write_value(&((*vm)->mem), val, addr, (*proc)->champ);
 	}
 	else
 	{
-		addr = (*proc)->pc - 1 - IND_SIZE - T_REG - (lst->next->param->ind * -1) % IDX_MOD;
+		addr = (*proc)->pc - 1 - IND_SIZE - T_REG -
+				(lst->next->param->ind * -1) % IDX_MOD;
 		write_value(&((*vm)->mem), *(lst->param->reg), addr, (*proc)->champ);
 	}
 	return (NULL);
@@ -79,12 +82,9 @@ void	*ft_add(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 {
 	int val;
 
-	if (param_type(read_value((*vm)->mem, codage, 1), 0, 4) == REG)
+	if (param_type(codage, 0, 4) == REG)
 		val = *(lst->param->reg) + *(lst->next->param->reg);
 	*(lst->next->next->param->reg) = val;
-	if ((*proc)->champ->carry)
-		(*proc)->champ->carry = 0;
-	else
-		(*proc)->champ->carry = 1;
+	(*proc)->carry = 1;
 	return (NULL);
 }
