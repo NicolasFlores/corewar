@@ -45,6 +45,8 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 			{
 				vm->cdelta -= CYCLE_DELTA;
 				vm->check = 0;
+				if (vm->cdelta <= 0)
+					vm->cdelta = 1;
 			}
 			else
 				vm->check++;
@@ -74,7 +76,7 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 							tmp3->proc->par = DIR;
 						else
 							tmp3->proc->par = DIRI;
-						if (par != NUL)
+						if (tmp3->proc->par != NUL)
 							set_param(vm->mem, tmp->param, tmp3->proc->par, tmp3->proc);
 						else
 							break ;

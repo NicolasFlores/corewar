@@ -63,7 +63,11 @@ void	*ft_ldi(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 								(lst->next->param->ind * -1) % IDX_MOD, 4);
 	}
 	else
+	{
+		if ((lst->param->reg) == NULL)
+			lst->param->reg = &((*proc)->reg[read_value((*vm)->mem, (*proc)->pc - size2 + 1, T_REG)]);
 		addr += *(lst->param->reg) % IDX_MOD;
+	}
 	if (addr >= 0)
 		addr %= IDX_MOD;
 	else
