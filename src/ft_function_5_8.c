@@ -17,7 +17,10 @@ void	*ft_sub(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	if (param_type(codage, 0, 5) == REG)
 		*(lst->next->next->param->reg) = *(lst->param->reg) -
 										*(lst->next->param->reg);
-	(*proc)->carry = 1;
+	if (*(lst->next->next->param->reg) == 0)
+		(*proc)->carry = 1;
+	else
+		(*proc)->carry = 0;
 	return (NULL);
 }
 
@@ -64,7 +67,10 @@ void	*ft_and(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 								IDX_MOD, REG_SIZE);
 	}
 	*(lst->next->next->param->reg) = val1 & val2;
-	(*proc)->carry = 1;
+	if ((val1 & val2) == 0)
+		(*proc)->carry = 1;
+	else
+		(*proc)->carry = 0;
 	return (NULL);
 }
 
@@ -111,7 +117,10 @@ void	*ft_or(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 								IDX_MOD, REG_SIZE);
 	}
 	*(lst->next->next->param->reg) = val1 | val2;
-	(*proc)->carry = 1;
+	if ((val1 | val2) == 0)
+		(*proc)->carry = 1;
+	else
+		(*proc)->carry = 0;
 	return (NULL);
 }
 
@@ -158,6 +167,9 @@ void	*ft_xor(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 								IDX_MOD, REG_SIZE);
 	}
 	*(lst->next->next->param->reg) = val1 ^ val2;
-	(*proc)->carry = 1;
+	if ((val1 ^ val2) == 0)
+		(*proc)->carry = 1;
+	else
+		(*proc)->carry = 0;
 	return (NULL);
 }

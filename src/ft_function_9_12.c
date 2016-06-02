@@ -21,8 +21,10 @@ void	*ft_zjmp(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 		else
 			(*proc)->pc = (*proc)->pc - T_DIR -
 							(lst->param->diri * -1) % IDX_MOD;
-		//(*proc)->carry = 0;
+		(*proc)->carry = 0;
 	}
+	else
+		(*proc)->carry = 1;
 	return (NULL);
 }
 
@@ -156,6 +158,10 @@ void	*ft_sti(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 			addr += (*proc)->pc - 1 - size1 - size2 - T_REG -
 					(*(lst->next->next->param->reg) * -1) % IDX_MOD;
 	}
+	if (addr >= 0)
+		addr %= IDX_MOD;
+	else
+		addr = ((addr * -1) % IDX_MOD) * -1;
 	write_value(&((*vm)->mem), *(lst->param->reg), addr, (*proc)->champ);
 	return (NULL);
 }
@@ -166,16 +172,18 @@ void	*ft_fork(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	int		i;
 
 	fork = init_proc((*proc)->champ, (*vm)->proc);
-	fork->pc = (*proc)->pc - T_DIR + lst->param->diri % IDX_MOD;
+	if (lst->param->diri >= 0)
+		fork->pc = (*proc)->pc - T_DIR + lst->param->diri % IDX_MOD;
+	else
+		fork->pc = (*proc)->pc - T_DIR - (lst->param->diri * -1) % IDX_MOD;
 	fork->carry = (*proc)->carry;
 	fork->live = (*proc)->live;
-	(*vm)->proc++;
-	(*proc)->carry = 1;
 	i = 0;
 	while (i < REG_NUMBER)
 	{
 		fork->reg[i] = (*proc)->reg[i];
 		i++;
 	}
+	(*vm)->proc++;
 	return (fork);
 }

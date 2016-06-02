@@ -117,12 +117,8 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 			tmp3 = tmp3->next;
 		}
 		vm->cycles++;
-		if (vm->cycles == 2715)
-		{;
-			//ft_printf("nb proc = %d\n", vm->proc);
-			//exit(0);
-		}
 	}
+	//ft_print_mem(vm->mem);
 	ft_printf("cycles =  %d\n", vm->cycles);
 	tmp2 = champ_list;
 	while (tmp2->next && tmp2->champ->num * -1 != vm->last_live)

@@ -24,7 +24,10 @@ void	*ft_lld(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 		*(lst->next->param->reg) =
 			read_value((*vm)->mem, (*proc)->pc - 1 - IND_SIZE - T_REG
 					- lst->param->ind * -1, REG_SIZE);
-	(*proc)->carry = 1;
+	if (*(lst->next->param->reg) == 0)
+		(*proc)->carry = 1;
+	else
+		(*proc)->carry = 0;
 	return (NULL);
 }
 
@@ -51,8 +54,12 @@ void	*ft_lldi(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 		addr += (*proc)->pc - 1 - size1 - size2 - T_REG +
 				*(lst->next->param->reg);
 	*(lst->next->next->param->reg) = read_value((*vm)->mem,
-												(*proc)->pc + addr, REG_SIZE);
-	(*proc)->carry = 1;
+												(*proc)->pc - 1 -size1 - size2
+												- T_REG + addr, REG_SIZE);
+	if (*(lst->next->next->param->reg) == 0)
+		(*proc)->carry = 1;
+	else
+		(*proc)->carry = 0;
 	return (NULL);
 }
 
@@ -65,14 +72,13 @@ void	*ft_lfork(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	fork->pc = (*proc)->pc - T_DIR + lst->param->diri;
 	fork->carry = (*proc)->carry;
 	fork->live = (*proc)->live;
-	(*vm)->proc++;
-	(*proc)->carry = 1;
 	i = 0;
 	while (i < REG_NUMBER)
 	{
 		fork->reg[i] = (*proc)->reg[i];
 		i++;
 	}
+	(*vm)->proc++;
 	return (fork);
 }
 

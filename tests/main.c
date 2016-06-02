@@ -29,6 +29,6 @@ int main(int argc, char **argv)
 		}
 		}
 	free(buf);*/
-	printf("int: %d short: %hd", 0xfffe, (short)0xfffe);
+	printf("int: %d short: %hhx", 0xfffe, (char)-2);
 	return 0;
 }

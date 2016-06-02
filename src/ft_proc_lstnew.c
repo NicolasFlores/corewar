@@ -16,6 +16,8 @@ t_proc_list	*ft_proc_lstnew(t_proc *proc)
 {
 	t_proc_list	*ret;
 
+	if (proc == NULL)
+		return (NULL);
 	ret = (t_proc_list *)malloc(sizeof(t_proc_list));
 	if (!ret)
 		exit(write(2, "Malloc error\n", 13));
@@ -28,6 +30,8 @@ void		ft_proc_lstadd(t_proc_list **lst, t_proc_list *new)
 {
 	t_proc_list *tmp;
 
+	if (new == NULL)
+		return ;
 	new->next = *lst;
 	*lst = new;
 }

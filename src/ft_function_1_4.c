@@ -50,7 +50,10 @@ void	*ft_ld(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 		*(lst->next->param->reg) = read_value((*vm)->mem,
 										(*proc)->pc - val % IDX_MOD, REG_SIZE);
 	}
-	(*proc)->carry = 1;
+	if (val == 0)
+		(*proc)->carry = 1;
+	else
+		(*proc)->carry = 0;
 	return (NULL);
 }
 
@@ -85,6 +88,9 @@ void	*ft_add(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	if (param_type(codage, 0, 4) == REG)
 		val = *(lst->param->reg) + *(lst->next->param->reg);
 	*(lst->next->next->param->reg) = val;
-	(*proc)->carry = 1;
+	if (val == 0)
+		(*proc)->carry = 1;
+	else
+		(*proc)->carry = 0;
 	return (NULL);
 }
