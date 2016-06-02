@@ -78,6 +78,7 @@ typedef struct			s_param
 {
 	int					*reg;
 	int					dir;
+	short				diri;
 	short				ind;
 }						t_param;
 
@@ -187,5 +188,11 @@ t_proc_list				*ft_proc_lstnew(t_proc *proc);
 void					ft_proc_lstadd(t_proc_list **lst, t_proc_list *new);
 void					ft_remove_proc(t_proc_list **lst, int n);
 int						ft_proc_lstsize(t_proc_list *lst);
+
+/*
+** debug
+*/
+
+void					ft_print_mem(t_mem *mem);
 
 #endif

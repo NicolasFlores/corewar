@@ -32,9 +32,9 @@ t_partype	param_type(char oct, int num, int opc)
 
 	oct = (oct >> (6 - (num * 2))) & 0b00000011;
 	ret = NUL;
-	if (oct == 1)
+	if (oct == 0b01)
 		ret = REG;
-	else if (oct == 2)
+	else if (oct == 0b10)
 	{
 		if (opc == 9 || opc == 10 || opc == 11 || opc == 12 ||
 			opc == 14 || opc == 15)
@@ -42,7 +42,7 @@ t_partype	param_type(char oct, int num, int opc)
 		else
 			ret = DIR;
 	}
-	else if (oct == 3)
+	else if (oct == 0b11)
 		ret = IND;
 	return (ret);
 }

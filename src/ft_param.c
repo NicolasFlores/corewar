@@ -22,6 +22,7 @@ t_param			*init_param(void)
 	ret->reg = NULL;
 	ret->ind = 0;
 	ret->dir = 0;
+	ret->diri = 0;
 	return (ret);
 }
 
@@ -35,6 +36,7 @@ void			reset_param(t_param_list **lst)
 		tmp->param->reg = NULL;
 		tmp->param->ind = 0;
 		tmp->param->dir = 0;
+		tmp->param->diri = 0;
 		tmp = tmp->next;
 	}
 }

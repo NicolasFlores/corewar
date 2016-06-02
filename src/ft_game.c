@@ -87,6 +87,8 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 							tmp3->proc->pc -= MEM_SIZE;
 					}
 				tmp3->proc->wex = vm->cycles + nb_cycles(tmp3->proc->opc);
+				if (vm->cycles != 0)
+					tmp3->proc->wex--;
 				tmp3->proc->exec = 0;
 			}
 			else if (tmp3->proc->exec && !is_opcode(tmp3->proc->opc))
@@ -97,10 +99,11 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 			}
 			if (vm->cycles != 0 && vm->cycles == tmp3->proc->wex)
 			{
-				if (tmp3->proc->opc == 1 || tmp3->proc->opc == 9 ||
-					ft_codage_valid(tmp3->proc->opc, (char)(tmp3->proc->codage)))
+				//ft_printf("cycle = %d | opcode = %d | proc = %d | pc = %d\n", vm->cycles, tmp3->proc->opc, tmp3->proc->num, tmp3->proc->pc);
+				if ((tmp3->proc->opc == 1 || tmp3->proc->opc == 9 ||
+					ft_codage_valid(tmp3->proc->opc, (char)(tmp3->proc->codage))) && tmp3->proc->par != NUL)
 					g_opcode[tmp3->proc->opc - 1](&vm, tmp3->proc->par_list, tmp3->proc->codage, &(tmp3->proc));
-				else if (tmp3->proc->opc == 12 || tmp3->proc->opc == 15)
+				else if ((tmp3->proc->opc == 12 || tmp3->proc->opc == 15) && tmp3->proc->par != NUL)
 				{
 					ft_proc_lstadd(&exec_proc,
 								ft_proc_lstnew(g_opcode[tmp3->proc->opc - 1](&vm, tmp3->proc->par_list, tmp3->proc->codage, &(tmp3->proc))));
@@ -114,7 +117,13 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 			tmp3 = tmp3->next;
 		}
 		vm->cycles++;
+		if (vm->cycles == 2715)
+		{;
+			//ft_printf("nb proc = %d\n", vm->proc);
+			//exit(0);
+		}
 	}
+	ft_printf("cycles =  %d\n", vm->cycles);
 	tmp2 = champ_list;
 	while (tmp2->next && tmp2->champ->num * -1 != vm->last_live)
 		tmp2 = tmp2->next;

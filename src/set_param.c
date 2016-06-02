@@ -26,7 +26,7 @@ void	set_param(t_mem *mem, t_param *param, t_partype par, t_proc *proc)
 	else if (par == IND)
 		param->ind = read_value(mem, proc->pc + 1, IND_SIZE);
 	else if (par == DIRI)
-		param->dir = read_value(mem, proc->pc + 1, DIR_SIZE / 2);
+		param->diri = read_value(mem, proc->pc + 1, DIR_SIZE / 2);
 	else
 		param->dir = read_value(mem, proc->pc + 1, DIR_SIZE);
 }
