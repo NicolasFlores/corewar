@@ -76,11 +76,11 @@ void	*ft_st(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 				(lst->next->param->ind * -1) % IDX_MOD;
 		write_value(&((*vm)->mem), *(lst->param->reg), addr + 1, (*proc)->champ);
 	}
-	if ((*vm)->cycles >= 4000 && *(lst->param->reg) != 0)
+	/*if ((*vm)->cycles >= 4000 && *(lst->param->reg) != 0)
 	{
 		ft_printf("cycle : %d proc%d pc = %d ind = %d", (*vm)->cycles, (*proc)->num, (*proc)->pc, lst->next->param->ind);
 		ft_printf(" write %d a %d\n", *(lst->param->reg), addr);
-	}
+	}*/
 	return (NULL);
 }
 

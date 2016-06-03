@@ -101,6 +101,34 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 			}
 			if (vm->cycles != 0 && vm->cycles == tmp3->proc->wex)
 			{
+				if (ft_param_erase(vm->mem, tmp3->proc))
+				{
+					tmp3->proc->pc = tmp3->proc->prevpc;
+					if (tmp3->proc->opc == 1 || tmp3->proc->opc == 9 || tmp3->proc->opc == 12 || tmp3->proc->opc == 15)
+						tmp3->proc->pc++;
+					else
+						tmp3->proc->pc += 2;
+					i = nb_param(tmp3->proc->opc);
+					tmp = tmp3->proc->par_list;
+					while (i)
+					{
+						if (tmp3->proc->opc != 1 && tmp3->proc->opc != 9 && tmp3->proc->opc != 12 && tmp3->proc->opc != 15)
+							tmp3->proc->par = param_type(tmp3->proc->codage, nb_param(tmp3->proc->opc) - i, tmp3->proc->opc);
+						else if (tmp3->proc->opc == 1)
+							tmp3->proc->par = DIR;
+						else
+							tmp3->proc->par = DIRI;
+						if (tmp3->proc->par != NUL)
+							set_param(vm->mem, tmp->param, tmp3->proc->par, tmp3->proc);
+						else
+							break ;
+						i--;
+						tmp = tmp->next;
+						tmp3->proc->pc += param_size(tmp3->proc->par);
+						if (tmp3->proc->pc >= MEM_SIZE)
+							tmp3->proc->pc -= MEM_SIZE;
+					}
+				}
 				//ft_printf("cycle = %d | opcode = %d | proc = %d | pc = %d\n", vm->cycles, tmp3->proc->opc, tmp3->proc->num, tmp3->proc->pc);
 				if ((tmp3->proc->opc == 1 || tmp3->proc->opc == 9 ||
 					ft_codage_valid(tmp3->proc->opc, (char)(tmp3->proc->codage))) && tmp3->proc->par != NUL)
@@ -119,13 +147,13 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 			tmp3 = tmp3->next;
 		}
 		vm->cycles++;
-		if (vm->cycles == 4411)
+		/*if (vm->cycles == 4411)
 		{
 			tmp3 = exec_proc;
 			ft_printf("nbproc = %d nb live = %d\n", ft_proc_lstsize(exec_proc), vm->live);
 			ft_print_mem(vm->mem);
 			exit(0);
-		}
+		}*/
 	}
 	ft_print_mem(vm->mem);
 	ft_printf("cycles =  %d\n", vm->cycles);
