@@ -46,6 +46,7 @@ t_proc		*init_proc(t_champ *champ, int n)
 	ret->champ = champ;
 	ret->num = n;
 	ret->pc = champ->pc;
+	ret->prevpc = champ->pc;
 	ret->live = 0;
 	ret->opc = 0;
 	ret->wex = 0;

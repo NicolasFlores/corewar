@@ -41,7 +41,7 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 		if (vm->cycles == vm->ctd)
 		{
 			kill_proc(&vm, &exec_proc);
-			if (vm->live >= 21 || vm->check == MAX_CHECKS)
+			if (vm->live >= NBR_LIVE || vm->check == MAX_CHECKS - 1)
 			{
 				vm->cdelta -= CYCLE_DELTA;
 				vm->check = 0;
@@ -51,6 +51,7 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 			else
 				vm->check++;
 			vm->ctd += vm->cdelta;
+			vm->live = 0;
 		}
 		tmp3 = exec_proc;
 		while (tmp3)
@@ -59,6 +60,7 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 				tmp3->proc->opc = read_value(vm->mem, tmp3->proc->pc + 1, 1);
 			if (tmp3->proc->exec && is_opcode(tmp3->proc->opc))
 			{
+				tmp3->proc->prevpc = tmp3->proc->pc;
 				if (tmp3->proc->opc == 1 || tmp3->proc->opc == 9 || tmp3->proc->opc == 12 || tmp3->proc->opc == 15)
 					tmp3->proc->pc++;
 				else
@@ -117,8 +119,15 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 			tmp3 = tmp3->next;
 		}
 		vm->cycles++;
+		if (vm->cycles == 4411)
+		{
+			tmp3 = exec_proc;
+			ft_printf("nbproc = %d nb live = %d\n", ft_proc_lstsize(exec_proc), vm->live);
+			ft_print_mem(vm->mem);
+			exit(0);
+		}
 	}
-	//ft_print_mem(vm->mem);
+	ft_print_mem(vm->mem);
 	ft_printf("cycles =  %d\n", vm->cycles);
 	tmp2 = champ_list;
 	while (tmp2->next && tmp2->champ->num * -1 != vm->last_live)

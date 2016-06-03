@@ -80,6 +80,7 @@ typedef struct			s_param
 	int					dir;
 	short				diri;
 	short				ind;
+	t_partype			par;
 }						t_param;
 
 typedef struct			s_param_list
@@ -104,6 +105,7 @@ typedef struct			s_proc
 	t_partype			par;
 	int					num;
 	int					pc;
+	int					prevpc;
 	int					live;
 	int					exec;
 	int					opc;
@@ -176,6 +178,7 @@ int						param_size(t_partype par);
 int						nb_cycles(int opc);
 void					set_param(t_mem *mem, t_param *param, t_partype par,
 								t_proc *proc);
+int						ft_param_erase(t_param_list *lst, char oct, int opc)
 int						ft_codage_valid(int opc, char codage);
 t_param					*init_param(void);
 void					reset_param(t_param_list **lst);

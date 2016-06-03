@@ -18,12 +18,12 @@ void	*ft_lld(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 		*(lst->next->param->reg) = lst->param->dir;
 	else if (lst->param->ind >= 0)
 		*(lst->next->param->reg) =
-			read_value((*vm)->mem, (*proc)->pc - 1 - IND_SIZE - T_REG
-					+ lst->param->ind, REG_SIZE);
+			read_value((*vm)->mem, (*proc)->pc - 2 - IND_SIZE - T_REG
+					+ lst->param->ind + 1, REG_SIZE);
 	else
 		*(lst->next->param->reg) =
-			read_value((*vm)->mem, (*proc)->pc - 1 - IND_SIZE - T_REG
-					- lst->param->ind * -1, REG_SIZE);
+			read_value((*vm)->mem, (*proc)->pc - 2 - IND_SIZE - T_REG
+					- lst->param->ind * -1 - 1, REG_SIZE);
 	if (*(lst->next->param->reg) == 0)
 		(*proc)->carry = 1;
 	else
@@ -40,21 +40,26 @@ void	*ft_lldi(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	size1 = param_size(param_type(codage, 0, 14));
 	size2 = param_size(param_type(codage, 1, 14));
 	if (param_type(codage, 0, 14) == DIRI)
-		addr = (*proc)->pc - 1 - size1 - size2 - T_REG + lst->param->diri;
+		addr = (*proc)->pc - 2 - size1 - size2 - T_REG + lst->param->diri;
 	else if (param_type(codage, 0, 14) == IND)
+	{
+		if (lst->param->ind >= 0)
+			addr = read_value((*vm)->mem,
+								(*proc)->pc - 2 - size1 - size2 - T_REG +
+								lst->param->ind + 1, 4);
+		else
 		addr = read_value((*vm)->mem,
-							(*proc)->pc - 1 - size1 - size2 - T_REG +
-							lst->param->ind, 4);
+							(*proc)->pc - 2 - size1 - size2 - T_REG +
+							lst->param->ind - 1, 4);
+	}
 	else
-		addr = (*proc)->pc - 1 - size1 - size2 - T_REG + *(lst->param->reg);
+		addr = (*proc)->pc - 2 - size1 - size2 - T_REG + *(lst->param->reg);
 	if (param_type(codage, 1, 14) == DIRI)
-		addr += (*proc)->pc - 1 - size1 - size2 - T_REG +
-				lst->next->param->diri;
+		addr += lst->next->param->diri;
 	else if (param_type(codage, 1, 14) == REG)
-		addr += (*proc)->pc - 1 - size1 - size2 - T_REG +
-				*(lst->next->param->reg);
+		addr += *(lst->next->param->reg);
 	*(lst->next->next->param->reg) = read_value((*vm)->mem,
-												(*proc)->pc - 1 -size1 - size2
+												(*proc)->pc - 2 - size1 - size2
 												- T_REG + addr, REG_SIZE);
 	if (*(lst->next->next->param->reg) == 0)
 		(*proc)->carry = 1;
@@ -69,9 +74,9 @@ void	*ft_lfork(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	int		i;
 
 	fork = init_proc((*proc)->champ, (*vm)->proc);
-	fork->pc = (*proc)->pc - T_DIR + lst->param->diri;
+	fork->pc = (*proc)->pc - 1 - T_DIR + lst->param->diri;
 	fork->carry = (*proc)->carry;
-	fork->live = (*proc)->live;
+	//fork->live = (*proc)->live;
 	i = 0;
 	while (i < REG_NUMBER)
 	{

@@ -29,4 +29,21 @@ void	set_param(t_mem *mem, t_param *param, t_partype par, t_proc *proc)
 		param->diri = read_value(mem, proc->pc + 1, DIR_SIZE / 2);
 	else
 		param->dir = read_value(mem, proc->pc + 1, DIR_SIZE);
+	param->par = par;
+}
+
+int		ft_param_erase(t_param_list *lst, int codage, int opc)
+{
+	t_param_list	*tmp;
+	t_param			*new;
+	int				i;
+
+	tmp = lst;
+	i = 0;
+	while (tmp)
+	{
+		i++;
+		tmp = tmp->next;
+	}
+	return (0);
 }

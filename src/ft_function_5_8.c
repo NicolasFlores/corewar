@@ -43,11 +43,11 @@ void	*ft_and(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	{
 		if (lst->param->ind >= 0)
 			val1 = read_value((*vm)->mem,
-								(*proc)->pc - 1 - size1 - size2 - size3 +
+								(*proc)->pc - 2 - size1 - size2 - size3 +
 								lst->param->ind % IDX_MOD, REG_SIZE);
 		else
 			val1 = read_value((*vm)->mem,
-								(*proc)->pc - 1 - size1 - size2 - size3 -
+								(*proc)->pc - 2 - size1 - size2 - size3 -
 								(lst->param->ind * -1) % IDX_MOD, REG_SIZE);
 	}
 	if (param_type(codage, 1, 6) == REG)
@@ -58,11 +58,11 @@ void	*ft_and(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	{
 		if (lst->next->param->ind >= 0)
 			val2 = read_value((*vm)->mem,
-								(*proc)->pc - 1 - size1 - size2 - size3 +
+								(*proc)->pc - 2 - size1 - size2 - size3 +
 								lst->next->param->ind % IDX_MOD, REG_SIZE);
 		else
 			val2 = read_value((*vm)->mem,
-								(*proc)->pc - 1 - size1 - size2 - size3 -
+								(*proc)->pc - 2 - size1 - size2 - size3 -
 								(lst->next->param->ind * -1) %
 								IDX_MOD, REG_SIZE);
 	}
@@ -93,11 +93,11 @@ void	*ft_or(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	{
 		if (lst->param->ind >= 0)
 			val1 = read_value((*vm)->mem,
-								(*proc)->pc - 1 - size1 - size2 - size3 +
+								(*proc)->pc - 2 - size1 - size2 - size3 +
 								lst->param->ind % IDX_MOD, REG_SIZE);
 		else
 			val1 = read_value((*vm)->mem,
-								(*proc)->pc - 1 - size1 - size2 - size3 -
+								(*proc)->pc - 2 - size1 - size2 - size3 -
 								(lst->param->ind * -1) % IDX_MOD, REG_SIZE);
 	}
 	if (param_type(codage, 1, 7) == REG)
@@ -108,11 +108,11 @@ void	*ft_or(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	{
 		if (lst->next->param->ind >= 0)
 			val2 = read_value((*vm)->mem,
-								(*proc)->pc - 1 - size1 - size2 - size3 +
+								(*proc)->pc - 2 - size1 - size2 - size3 +
 								lst->next->param->ind % IDX_MOD, REG_SIZE);
 		else
 			val2 = read_value((*vm)->mem,
-								(*proc)->pc - 1 - size1 - size2 - size3 -
+								(*proc)->pc - 2 - size1 - size2 - size3 -
 								(lst->next->param->ind * -1) %
 								IDX_MOD, REG_SIZE);
 	}
@@ -143,11 +143,11 @@ void	*ft_xor(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	{
 		if (lst->param->ind >= 0)
 			val1 = read_value((*vm)->mem,
-								(*proc)->pc - 1 - size1 - size2 - size3 +
+								(*proc)->pc - 2 - size1 - size2 - size3 +
 								lst->param->ind % IDX_MOD, REG_SIZE);
 		else
 			val1 = read_value((*vm)->mem,
-								(*proc)->pc - 1 - size1 - size2 - size3 -
+								(*proc)->pc - 2 - size1 - size2 - size3 -
 								(lst->param->ind * -1) % IDX_MOD, REG_SIZE);
 	}
 	if (param_type(codage, 1, 8) == REG)
@@ -158,11 +158,11 @@ void	*ft_xor(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	{
 		if (lst->next->param->ind >= 0)
 			val2 = read_value((*vm)->mem,
-								(*proc)->pc - 1 - size1 - size2 - size3 +
+								(*proc)->pc - 2 - size1 - size2 - size3 +
 								lst->next->param->ind % IDX_MOD, REG_SIZE);
 		else
 			val2 = read_value((*vm)->mem,
-								(*proc)->pc - 1 - size1 - size2 - size3 -
+								(*proc)->pc - 2 - size1 - size2 - size3 -
 								(lst->next->param->ind * -1) %
 								IDX_MOD, REG_SIZE);
 	}

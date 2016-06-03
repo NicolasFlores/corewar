@@ -19,7 +19,7 @@ void	ft_print_mem(t_mem *mem)
 	i = 0;
 	while (i < MEM_SIZE)
 	{
-		ft_printf("%.2x ", mem->oct);
+		ft_printf("%.2hhx ", mem->oct);
 		i++;
 		mem = mem->next;
 		if (i != 0 && i % 64 == 0)

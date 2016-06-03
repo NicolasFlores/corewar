@@ -16,7 +16,7 @@ void	*ft_live(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 {
 	t_champ_list	*tmp;
 
-	(*proc)->live = (*proc)->pc + 10;
+	(*proc)->live = 1;
 	(*vm)->live++;
 	tmp = (*vm)->champ_list;
 	while (tmp)
@@ -40,15 +40,13 @@ void	*ft_ld(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	}
 	else if (lst->param->ind >= 0)
 	{
-		val = (*proc)->pc - 1 - IND_SIZE - T_REG + lst->param->ind;
-		*(lst->next->param->reg) = read_value((*vm)->mem,
-										(*proc)->pc + val % IDX_MOD, REG_SIZE);
+		val = (*proc)->pc - 2 - IND_SIZE - T_REG + lst->param->ind % IDX_MOD;
+		*(lst->next->param->reg) = read_value((*vm)->mem, val + 1, REG_SIZE);
 	}
 	else
 	{
-		val = (*proc)->pc - 1 - IND_SIZE - T_REG - lst->param->ind;
-		*(lst->next->param->reg) = read_value((*vm)->mem,
-										(*proc)->pc - val % IDX_MOD, REG_SIZE);
+		val = (*proc)->pc - 2 - IND_SIZE - T_REG - (lst->param->ind * -1) % IDX_MOD;
+		*(lst->next->param->reg) = read_value((*vm)->mem, val - 1, REG_SIZE);
 	}
 	if (val == 0)
 		(*proc)->carry = 1;
@@ -68,15 +66,20 @@ void	*ft_st(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 		*(lst->next->param->reg) = *(lst->param->reg);
 	else if (lst->next->param->ind >= 0)
 	{
-		addr = (*proc)->pc - 1 - IND_SIZE - T_REG +
+		addr = (*proc)->pc - 2 - IND_SIZE - T_REG +
 				lst->next->param->ind % IDX_MOD;
-		write_value(&((*vm)->mem), val, addr, (*proc)->champ);
+		write_value(&((*vm)->mem), val, addr + 1, (*proc)->champ);
 	}
 	else
 	{
-		addr = (*proc)->pc - 1 - IND_SIZE - T_REG -
+		addr = (*proc)->pc - 2 - IND_SIZE - T_REG -
 				(lst->next->param->ind * -1) % IDX_MOD;
-		write_value(&((*vm)->mem), *(lst->param->reg), addr, (*proc)->champ);
+		write_value(&((*vm)->mem), *(lst->param->reg), addr + 1, (*proc)->champ);
+	}
+	if ((*vm)->cycles >= 4000 && *(lst->param->reg) != 0)
+	{
+		ft_printf("cycle : %d proc%d pc = %d ind = %d", (*vm)->cycles, (*proc)->num, (*proc)->pc, lst->next->param->ind);
+		ft_printf(" write %d a %d\n", *(lst->param->reg), addr);
 	}
 	return (NULL);
 }
