@@ -12,7 +12,7 @@
 
 #include "../include/vm.h"
 
-void	*ft_live(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
+void	*ft_live(t_vm **vm, t_param_list *lst, t_proc **proc)
 {
 	t_champ_list	*tmp;
 
@@ -28,12 +28,12 @@ void	*ft_live(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	return (NULL);
 }
 
-void	*ft_ld(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
+void	*ft_ld(t_vm **vm, t_param_list *lst, t_proc **proc)
 {
 	int val;
 
 	val = 0;
-	if (param_type(codage, 0, 2) == DIR)
+	if (param_type((*proc)->codage, 0, 2) == DIR)
 	{
 		val = lst->param->dir;
 		*(lst->next->param->reg) = val;
@@ -55,14 +55,14 @@ void	*ft_ld(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	return (NULL);
 }
 
-void	*ft_st(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
+void	*ft_st(t_vm **vm, t_param_list *lst, t_proc **proc)
 {
 	int addr;
 	int val;
 
 	val = *(lst->param->reg);
 	addr = 0;
-	if (param_type(codage, 1, 3) == REG)
+	if (param_type((*proc)->codage, 1, 3) == REG)
 		*(lst->next->param->reg) = *(lst->param->reg);
 	else if (lst->next->param->ind >= 0)
 	{
@@ -84,11 +84,14 @@ void	*ft_st(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	return (NULL);
 }
 
-void	*ft_add(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
+void	*ft_add(t_vm **vm, t_param_list *lst, t_proc **proc)
 {
 	int val;
 
-	if (param_type(codage, 0, 4) == REG)
+	val = 0;
+	if (!(*vm))
+		return (NULL);
+	if (param_type((*proc)->codage, 0, 4) == REG)
 		val = *(lst->param->reg) + *(lst->next->param->reg);
 	*(lst->next->next->param->reg) = val;
 	if (val == 0)

@@ -58,7 +58,6 @@ t_proc		*init_proc(t_champ *champ, int n)
 void		kill_proc(t_vm **vm, t_proc_list **exec_proc)
 {
 	int				i;
-	int				j;
 	int				tpr;
 	t_proc_list		*tmp;
 	t_proc_list		*tmp2;

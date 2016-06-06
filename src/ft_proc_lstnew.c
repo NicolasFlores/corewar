@@ -28,8 +28,6 @@ t_proc_list	*ft_proc_lstnew(t_proc *proc)
 
 void		ft_proc_lstadd(t_proc_list **lst, t_proc_list *new)
 {
-	t_proc_list *tmp;
-
 	if (new == NULL)
 		return ;
 	new->next = *lst;

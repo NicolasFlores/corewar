@@ -12,9 +12,11 @@
 
 #include "../include/vm.h"
 
-void	*ft_sub(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
+void	*ft_sub(t_vm **vm, t_param_list *lst, t_proc **proc)
 {
-	if (param_type(codage, 0, 5) == REG)
+	if (!(*vm))
+		return (NULL);
+	if (param_type((*proc)->codage, 0, 5) == REG)
 		*(lst->next->next->param->reg) = *(lst->param->reg) -
 										*(lst->next->param->reg);
 	if (*(lst->next->next->param->reg) == 0)
@@ -24,7 +26,7 @@ void	*ft_sub(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	return (NULL);
 }
 
-void	*ft_and(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
+void	*ft_and(t_vm **vm, t_param_list *lst, t_proc **proc)
 {
 	int val1;
 	int val2;
@@ -32,12 +34,12 @@ void	*ft_and(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	int size2;
 	int size3;
 
-	size1 = param_size(param_type(codage, 0, 6));
-	size2 = param_size(param_type(codage, 1, 6));
-	size3 = param_size(param_type(codage, 2, 6));
-	if (param_type(codage, 0, 6) == REG)
+	size1 = param_size(param_type((*proc)->codage, 0, 6));
+	size2 = param_size(param_type((*proc)->codage, 1, 6));
+	size3 = param_size(param_type((*proc)->codage, 2, 6));
+	if (param_type((*proc)->codage, 0, 6) == REG)
 		val1 = *(lst->param->reg);
-	else if (param_type(codage, 0, 6) == DIR)
+	else if (param_type((*proc)->codage, 0, 6) == DIR)
 		val1 = lst->param->dir;
 	else
 	{
@@ -50,9 +52,9 @@ void	*ft_and(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 								(*proc)->pc - 2 - size1 - size2 - size3 -
 								(lst->param->ind * -1) % IDX_MOD, REG_SIZE);
 	}
-	if (param_type(codage, 1, 6) == REG)
+	if (param_type((*proc)->codage, 1, 6) == REG)
 		val2 = *(lst->next->param->reg);
-	else if (param_type(codage, 1, 6) == DIR)
+	else if (param_type((*proc)->codage, 1, 6) == DIR)
 		val2 = lst->next->param->dir;
 	else
 	{
@@ -74,7 +76,7 @@ void	*ft_and(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	return (NULL);
 }
 
-void	*ft_or(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
+void	*ft_or(t_vm **vm, t_param_list *lst, t_proc **proc)
 {
 	int val1;
 	int val2;
@@ -82,12 +84,12 @@ void	*ft_or(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	int size2;
 	int size3;
 
-	size1 = param_size(param_type(codage, 0, 7));
-	size2 = param_size(param_type(codage, 1, 7));
-	size3 = param_size(param_type(codage, 2, 7));
-	if (param_type(codage, 0, 7) == REG)
+	size1 = param_size(param_type((*proc)->codage, 0, 7));
+	size2 = param_size(param_type((*proc)->codage, 1, 7));
+	size3 = param_size(param_type((*proc)->codage, 2, 7));
+	if (param_type((*proc)->codage, 0, 7) == REG)
 		val1 = *(lst->param->reg);
-	else if (param_type(codage, 0, 7) == DIR)
+	else if (param_type((*proc)->codage, 0, 7) == DIR)
 		val1 = lst->param->dir;
 	else
 	{
@@ -100,9 +102,9 @@ void	*ft_or(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 								(*proc)->pc - 2 - size1 - size2 - size3 -
 								(lst->param->ind * -1) % IDX_MOD, REG_SIZE);
 	}
-	if (param_type(codage, 1, 7) == REG)
+	if (param_type((*proc)->codage, 1, 7) == REG)
 		val2 = *(lst->next->param->reg);
-	else if (param_type(codage, 1, 7) == DIR)
+	else if (param_type((*proc)->codage, 1, 7) == DIR)
 		val2 = lst->next->param->dir;
 	else
 	{
@@ -124,7 +126,7 @@ void	*ft_or(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	return (NULL);
 }
 
-void	*ft_xor(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
+void	*ft_xor(t_vm **vm, t_param_list *lst, t_proc **proc)
 {
 	int val1;
 	int val2;
@@ -132,12 +134,12 @@ void	*ft_xor(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	int size2;
 	int size3;
 
-	size1 = param_size(param_type(codage, 0, 8));
-	size2 = param_size(param_type(codage, 1, 8));
-	size3 = param_size(param_type(codage, 2, 8));
-	if (param_type(codage, 0, 8) == REG)
+	size1 = param_size(param_type((*proc)->codage, 0, 8));
+	size2 = param_size(param_type((*proc)->codage, 1, 8));
+	size3 = param_size(param_type((*proc)->codage, 2, 8));
+	if (param_type((*proc)->codage, 0, 8) == REG)
 		val1 = *(lst->param->reg);
-	else if (param_type(codage, 0, 8) == DIR)
+	else if (param_type((*proc)->codage, 0, 8) == DIR)
 		val1 = lst->param->dir;
 	else
 	{
@@ -150,9 +152,9 @@ void	*ft_xor(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 								(*proc)->pc - 2 - size1 - size2 - size3 -
 								(lst->param->ind * -1) % IDX_MOD, REG_SIZE);
 	}
-	if (param_type(codage, 1, 8) == REG)
+	if (param_type((*proc)->codage, 1, 8) == REG)
 		val2 = *(lst->next->param->reg);
-	else if (param_type(codage, 1, 8) == DIR)
+	else if (param_type((*proc)->codage, 1, 8) == DIR)
 		val2 = lst->next->param->dir;
 	else
 	{

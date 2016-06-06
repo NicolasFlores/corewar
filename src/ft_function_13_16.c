@@ -12,9 +12,9 @@
 
 #include "../include/vm.h"
 
-void	*ft_lld(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
+void	*ft_lld(t_vm **vm, t_param_list *lst, t_proc **proc)
 {
-	if (param_type(codage, 0, 13) == DIR)
+	if (param_type((*proc)->codage, 0, 13) == DIR)
 		*(lst->next->param->reg) = lst->param->dir;
 	else if (lst->param->ind >= 0)
 		*(lst->next->param->reg) =
@@ -31,32 +31,32 @@ void	*ft_lld(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	return (NULL);
 }
 
-void	*ft_lldi(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
+void	*ft_lldi(t_vm **vm, t_param_list *lst, t_proc **proc)
 {
 	int addr;
 	int size1;
 	int size2;
 
-	size1 = param_size(param_type(codage, 0, 14));
-	size2 = param_size(param_type(codage, 1, 14));
-	if (param_type(codage, 0, 14) == DIRI)
+	size1 = param_size(param_type((*proc)->codage, 0, 14));
+	size2 = param_size(param_type((*proc)->codage, 1, 14));
+	if (param_type((*proc)->codage, 0, 14) == DIRI)
 		addr = (*proc)->pc - 2 - size1 - size2 - T_REG + lst->param->diri;
-	else if (param_type(codage, 0, 14) == IND)
+	else if (param_type((*proc)->codage, 0, 14) == IND)
 	{
 		if (lst->param->ind >= 0)
 			addr = read_value((*vm)->mem,
 								(*proc)->pc - 2 - size1 - size2 - T_REG +
 								lst->param->ind + 1, 4);
 		else
-		addr = read_value((*vm)->mem,
-							(*proc)->pc - 2 - size1 - size2 - T_REG +
-							lst->param->ind - 1, 4);
+			addr = read_value((*vm)->mem,
+								(*proc)->pc - 2 - size1 - size2 - T_REG +
+								lst->param->ind - 1, 4);
 	}
 	else
 		addr = (*proc)->pc - 2 - size1 - size2 - T_REG + *(lst->param->reg);
-	if (param_type(codage, 1, 14) == DIRI)
+	if (param_type((*proc)->codage, 1, 14) == DIRI)
 		addr += lst->next->param->diri;
-	else if (param_type(codage, 1, 14) == REG)
+	else if (param_type((*proc)->codage, 1, 14) == REG)
 		addr += *(lst->next->param->reg);
 	*(lst->next->next->param->reg) = read_value((*vm)->mem,
 												(*proc)->pc - 2 - size1 - size2
@@ -68,7 +68,7 @@ void	*ft_lldi(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	return (NULL);
 }
 
-void	*ft_lfork(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
+void	*ft_lfork(t_vm **vm, t_param_list *lst, t_proc **proc)
 {
 	t_proc	*fork;
 	int		i;
@@ -76,7 +76,7 @@ void	*ft_lfork(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	fork = init_proc((*proc)->champ, (*vm)->proc);
 	fork->pc = (*proc)->pc - 1 - T_DIR + lst->param->diri;
 	fork->carry = (*proc)->carry;
-	//fork->live = (*proc)->live;
+	fork->live = (*proc)->live;
 	i = 0;
 	while (i < REG_NUMBER)
 	{
@@ -87,10 +87,12 @@ void	*ft_lfork(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	return (fork);
 }
 
-void	*ft_aff(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
+void	*ft_aff(t_vm **vm, t_param_list *lst, t_proc **proc)
 {
 	unsigned char c;
 
+	if (!(*vm) || lst != (*proc)->par_list)
+		return (NULL);
 	c = *(lst->param->reg);
 	ft_printf("Aff : %c\n", c);
 	return (NULL);

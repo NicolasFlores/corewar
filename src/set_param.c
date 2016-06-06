@@ -40,7 +40,6 @@ int		ft_param_erase(t_mem *mem, t_proc *proc)
 	int				i;
 
 	tmp = proc->par_list;
-	new = init_param();
 	tmp2 = init_proc(proc->champ, 0);
 	tmp2->pc = proc->prevpc;
 	i = 0;
@@ -49,22 +48,35 @@ int		ft_param_erase(t_mem *mem, t_proc *proc)
 		tmp2->reg[i] = proc->reg[i];
 		i++;
 	}
+	i = 0;
 	while (tmp)
 	{
+		new = init_param();
 		if (tmp->param->par != NUL)
 			set_param(mem, new, tmp->param->par, tmp2);
 		new->par = tmp->param->par;
 		if (new->par == REG && *(new->reg) != *(tmp->param->reg))
-			return (1);
+			i = 1;
 		else if (new->par == IND && new->ind != tmp->param->ind)
-			return (1);
+			i = 1;
 		else if (new->par == DIRI && new->diri != tmp->param->diri)
-			return (1);
+			i = 1;
 		else if (new->par == DIR && new->dir != tmp->param->dir)
-			return (1);
+			i = 1;
 		tmp = tmp->next;
+		free(new);
 	}
-	free(new);
+	ft_free_parlst(&(tmp2->par_list));
 	free(tmp2);
+	return (i);
+}
+
+int		ft_codage_erase(t_mem *mem, t_proc *proc)
+{
+	if (proc->opc != 1 && proc->opc != 9 && proc->opc != 12 && proc->opc != 15)
+	{
+		if (read_value(mem, proc->prevpc + 2, 1) != proc->codage)
+			return (1);
+	}
 	return (0);
 }

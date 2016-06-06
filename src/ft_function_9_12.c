@@ -12,8 +12,10 @@
 
 #include "../include/vm.h"
 
-void	*ft_zjmp(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
+void	*ft_zjmp(t_vm **vm, t_param_list *lst, t_proc **proc)
 {
+	if (!(*vm))
+		return (NULL);
 	if ((*proc)->carry == 1)
 	{
 		if (lst->param->dir >= 0)
@@ -25,15 +27,15 @@ void	*ft_zjmp(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	return (NULL);
 }
 
-void	*ft_ldi(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
+void	*ft_ldi(t_vm **vm, t_param_list *lst, t_proc **proc)
 {
 	int addr;
 	int size1;
 	int size2;
 
-	size1 = param_size(param_type(codage, 0, 10));
-	size2 = param_size(param_type(codage, 1, 10));
-	if (param_type(codage, 0, 10) == DIRI)
+	size1 = param_size(param_type((*proc)->codage, 0, 10));
+	size2 = param_size(param_type((*proc)->codage, 1, 10));
+	if (param_type((*proc)->codage, 0, 10) == DIRI)
 	{
 		if (lst->next->next->param->diri >= 0)
 			addr = (*proc)->pc - 2 - size1 - size2 - T_REG +
@@ -42,7 +44,7 @@ void	*ft_ldi(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 			addr = (*proc)->pc - 2 - size1 - size2 - T_REG -
 					(lst->param->diri * -1) % IDX_MOD;
 	}
-	else if (param_type(codage, 0, 10) == IND)
+	else if (param_type((*proc)->codage, 0, 10) == IND)
 	{
 		if (lst->param->ind >= 0)
 			addr = read_value((*vm)->mem,
@@ -62,7 +64,7 @@ void	*ft_ldi(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 			addr = (*proc)->pc - 2 - size1 - size2 - T_REG +
 					(*(lst->param->reg) * -1) % IDX_MOD;
 	}
-	if (param_type(codage, 1, 10) == DIRI)
+	if (param_type((*proc)->codage, 1, 10) == DIRI)
 	{
 		if (lst->next->next->param->diri >= 0)
 			addr += (*proc)->pc - 2 - size1 - size2 - T_REG +
@@ -71,7 +73,7 @@ void	*ft_ldi(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 			addr += (*proc)->pc - 2 - size1 - size2 - T_REG +
 					(lst->next->param->diri * -1) % IDX_MOD;
 	}
-	else if (param_type(codage, 1, 10) == IND)
+	else if (param_type((*proc)->codage, 1, 10) == IND)
 	{
 		if (lst->next->param->ind >= 0)
 			addr += read_value((*vm)->mem,
@@ -106,15 +108,15 @@ void	*ft_ldi(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	return (NULL);
 }
 
-void	*ft_sti(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
+void	*ft_sti(t_vm **vm, t_param_list *lst, t_proc **proc)
 {
 	int addr;
 	int size1;
 	int size2;
 
-	size1 = param_size(param_type(codage, 1, 11));
-	size2 = param_size(param_type(codage, 2, 11));
-	if (param_type(codage, 1, 11) == DIRI)
+	size1 = param_size(param_type((*proc)->codage, 1, 11));
+	size2 = param_size(param_type((*proc)->codage, 2, 11));
+	if (param_type((*proc)->codage, 1, 11) == DIRI)
 	{
 		if (lst->next->param->diri >= 0)
 			addr = (*proc)->pc - 2 - size1 - size2 - T_REG +
@@ -123,7 +125,7 @@ void	*ft_sti(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 			addr = (*proc)->pc - 2 - size1 - size2 - T_REG -
 					(lst->next->param->diri * -1) % IDX_MOD;
 	}
-	else if (param_type(codage, 1, 11) == IND)
+	else if (param_type((*proc)->codage, 1, 11) == IND)
 	{
 		if (lst->next->param->ind >= 0)
 			addr = read_value((*vm)->mem,
@@ -143,7 +145,7 @@ void	*ft_sti(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 			addr = (*proc)->pc - 2 - size1 - size2 - T_REG -
 					(*(lst->next->param->reg) * -1) % IDX_MOD;
 	}
-	if (param_type(codage, 2, 11) == DIRI)
+	if (param_type((*proc)->codage, 2, 11) == DIRI)
 	{
 		if (lst->next->next->param->diri >= 0)
 			addr += lst->next->next->param->diri % IDX_MOD;
@@ -165,7 +167,7 @@ void	*ft_sti(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
 	return (NULL);
 }
 
-void	*ft_fork(t_vm **vm, t_param_list *lst, int codage, t_proc **proc)
+void	*ft_fork(t_vm **vm, t_param_list *lst, t_proc **proc)
 {
 	t_proc	*fork;
 	int		i;

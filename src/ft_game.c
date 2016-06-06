@@ -12,7 +12,7 @@
 
 #include "../include/vm.h"
 
-void		*(*g_opcode[])(t_vm **, t_param_list *, int, t_proc **) = {
+void		*(*g_opcode[])(t_vm **, t_param_list *, t_proc **) = {
 	ft_live, ft_ld, ft_st, ft_add, ft_sub, ft_and, ft_or, ft_xor, ft_zjmp,
 	ft_ldi, ft_sti, ft_fork, ft_lld, ft_lldi, ft_lfork, ft_aff};
 
@@ -101,6 +101,13 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 			}
 			if (vm->cycles != 0 && vm->cycles == tmp3->proc->wex)
 			{
+				if (ft_codage_erase(vm->mem, tmp3->proc))
+				{
+					if (tmp3->proc->opc == 1 || tmp3->proc->opc == 9 || tmp3->proc->opc == 12 || tmp3->proc->opc == 15)
+						tmp3->proc->codage = read_value(vm->mem, tmp3->proc->prevpc + 1, 1);
+					else
+						tmp3->proc->codage = read_value(vm->mem, tmp3->proc->prevpc + 2, 1);
+				}
 				if (ft_param_erase(vm->mem, tmp3->proc))
 				{
 					tmp3->proc->pc = tmp3->proc->prevpc;
@@ -132,11 +139,11 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 				//ft_printf("cycle = %d | opcode = %d | proc = %d | pc = %d\n", vm->cycles, tmp3->proc->opc, tmp3->proc->num, tmp3->proc->pc);
 				if ((tmp3->proc->opc == 1 || tmp3->proc->opc == 9 ||
 					ft_codage_valid(tmp3->proc->opc, (char)(tmp3->proc->codage))) && tmp3->proc->par != NUL)
-					g_opcode[tmp3->proc->opc - 1](&vm, tmp3->proc->par_list, tmp3->proc->codage, &(tmp3->proc));
+					g_opcode[tmp3->proc->opc - 1](&vm, tmp3->proc->par_list, &(tmp3->proc));
 				else if ((tmp3->proc->opc == 12 || tmp3->proc->opc == 15) && tmp3->proc->par != NUL)
 				{
 					ft_proc_lstadd(&exec_proc,
-								ft_proc_lstnew(g_opcode[tmp3->proc->opc - 1](&vm, tmp3->proc->par_list, tmp3->proc->codage, &(tmp3->proc))));
+								ft_proc_lstnew(g_opcode[tmp3->proc->opc - 1](&vm, tmp3->proc->par_list, &(tmp3->proc))));
 				}
 				tmp3->proc->exec = 1;
 				reset_param(&(tmp3->proc->par_list));
@@ -147,13 +154,13 @@ void		ft_game(t_vm *vm, t_champ_list *champ_list)
 			tmp3 = tmp3->next;
 		}
 		vm->cycles++;
-		/*if (vm->cycles == 4411)
+		if (vm->cycles == /*4491*/22273)
 		{
 			tmp3 = exec_proc;
 			ft_printf("nbproc = %d nb live = %d\n", ft_proc_lstsize(exec_proc), vm->live);
 			ft_print_mem(vm->mem);
 			exit(0);
-		}*/
+		}
 	}
 	ft_print_mem(vm->mem);
 	ft_printf("cycles =  %d\n", vm->cycles);
