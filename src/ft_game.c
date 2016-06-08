@@ -6,7 +6,7 @@
 /*   By: nflores <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/18 15:21:30 by nflores           #+#    #+#             */
-/*   Updated: 2016/05/30 17:55:36 by nflores          ###   ########.fr       */
+/*   Updated: 2016/06/08 12:03:27 by nflores          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	ft_param_game(t_vm *vm, t_proc_list **lst, int i, t_param_list *tmp)
 
 void	get_opc(t_proc_list **lst, t_vm *vm)
 {
-	int 			i;
+	int				i;
 	t_param_list	*tmp;
 
 	if (!is_opcode((*lst)->proc->opc))

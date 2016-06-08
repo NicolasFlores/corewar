@@ -174,21 +174,50 @@ typedef struct			s_proc_list
 /*
 ** function
 */
+/*
+** parsing
+*/
 
 int						get_opt(t_opt **opt, int argc, char **argv);
 int						check_arg(char **buf, char *arg);
+
+/*
+** lists
+*/
+
 t_champ_list			*ft_champ_lstnew(t_champ *new);
 void					ft_champ_lstadd(t_champ_list **lst, t_champ_list *new);
 int						ft_champ_lstsize(t_champ_list *lst);
+t_proc_list				*ft_proc_lstnew(t_proc *proc);
+void					ft_proc_lstadd(t_proc_list **lst, t_proc_list *new);
+void					ft_proc_lstaddend(t_proc_list **lst, t_proc_list *new);
+void					ft_remove_proc(t_proc_list **lst, int n);
+int						ft_proc_lstsize(t_proc_list *lst);
+t_param_list			*ft_param_lstnew(void);
+void					ft_param_lstadd(t_param_list **lst, t_param_list *new);
+void					ft_free_parlst(t_param_list **lst);
+void					kill_proc(t_vm **vm, t_proc_list **exec_proc);
+
+/*
+** struct
+*/
+
 t_champ					*ft_newchamp(char *name, char *comment, int t_size,
 									int pr_size);
 void					init_champ(char **argv, int i,
 								t_champ_list **champ_list, t_opt *opt);
-void					ft_print_contest(t_champ_list *champ_list);
 void					ft_meminit(t_mem **mem, int size);
 void					ft_gameinit(t_mem **mem, t_champ_list *lst,
 									int nb_champ);
 t_vm					*init_vm(t_mem *mem, t_champ_list *lst);
+t_param					*init_param(void);
+void					reset_param(t_param_list **lst);
+t_proc					*init_proc(t_champ *champ, int n);
+
+/*
+** process
+*/
+
 void					ft_game(t_vm *vm, t_champ_list *champ_list, t_opt *opt);
 void					get_opc(t_proc_list **lst, t_vm *vm);
 void					exec_opc(t_proc_list **lst, t_proc_list **exec_proc,
@@ -228,20 +257,12 @@ void					set_param(t_mem *mem, t_param *param, t_partype par,
 int						ft_param_erase(t_mem *mem, t_proc *proc);
 int						ft_codage_erase(t_mem *mem, t_proc *proc);
 int						ft_codage_valid(int opc, char codage);
-t_param					*init_param(void);
-void					reset_param(t_param_list **lst);
-t_param_list			*ft_param_lstnew(void);
-void					ft_param_lstadd(t_param_list **lst, t_param_list *new);
-void					ft_free_parlst(t_param_list **lst);
-t_proc					*init_proc(t_champ *champ, int n);
-void					kill_proc(t_vm **vm, t_proc_list **exec_proc);
-t_proc_list				*ft_proc_lstnew(t_proc *proc);
-void					ft_proc_lstadd(t_proc_list **lst, t_proc_list *new);
-void					ft_proc_lstaddend(t_proc_list **lst, t_proc_list *new);
-void					ft_remove_proc(t_proc_list **lst, int n);
-int						ft_proc_lstsize(t_proc_list *lst);
+
+/*
+** print
+*/
 
 void					ft_print_mem(t_mem *mem);
-
+void					ft_print_contest(t_champ_list *champ_list);
 
 #endif
