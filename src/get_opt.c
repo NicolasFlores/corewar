@@ -20,7 +20,10 @@ static void	init_opt(t_opt **opt)
 	(*opt)->opt_d = 0;
 	(*opt)->opt_n = 0;
 	(*opt)->n_d = 0;
-	(*opt)->n_n = 0;
+	(*opt)->n_n = (int *)malloc(sizeof(int));
+	if (!((*opt)->n_n))
+		exit(write(2, "Malloc error\n", 13));
+	*((*opt)->n_n) = 0;
 }
 
 static void	check_opt_format(char **argv, int ret)
@@ -36,6 +39,27 @@ static void	check_opt_format(char **argv, int ret)
 	}
 }
 
+void		set_optn(t_opt **opt, char **argv, int size, int ret)
+{
+	int *tmp;
+	int i;
+
+	i = 0;
+	while (i < size)
+	{
+		if (ft_atoi(argv[ret + 1]) == (*opt)->n_n[i])
+			exit(write(2, "Same num for champ is invalid\n", 30));
+		i++;
+	}
+	if (size > 0)
+	{
+		tmp = (int *)realloc((*opt)->n_n, sizeof(int) * (size + 1));
+		(*opt)->n_n = tmp;
+		tmp = NULL;
+	}
+	(*opt)->n_n[size] = ft_atoi(argv[ret + 1]);
+}
+
 int			get_opt(t_opt **opt, int argc, char **argv)
 {
 	int ret;
@@ -46,9 +70,9 @@ int			get_opt(t_opt **opt, int argc, char **argv)
 	{
 		if (argv[ret][1] == 'n' && argv[ret][2] == '\0')
 		{
-			(*opt)->opt_n = 1;
 			check_opt_format(argv, ret);
-			(*opt)->n_n = ft_atoi(argv[ret + 1]);
+			set_optn(opt, argv, (*opt)->opt_n, ret);
+			(*opt)->opt_n++;
 			ret += 2;
 		}
 		else if (argv[ret][1] == 'd' && argv[ret][2] == '\0')

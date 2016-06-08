@@ -98,7 +98,7 @@ typedef struct			s_opt
 	int					opt_d;
 	int					opt_n;
 	int					n_d;
-	int					n_n;
+	int					*n_n;
 }						t_opt;
 
 typedef struct			s_mem
@@ -197,6 +197,7 @@ t_param_list			*ft_param_lstnew(void);
 void					ft_param_lstadd(t_param_list **lst, t_param_list *new);
 void					ft_free_parlst(t_param_list **lst);
 void					kill_proc(t_vm **vm, t_proc_list **exec_proc);
+void					ft_set_champnum(t_champ_list *lst, t_opt *opt);
 
 /*
 ** struct

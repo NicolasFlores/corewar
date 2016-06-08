@@ -47,3 +47,52 @@ int				ft_champ_lstsize(t_champ_list *lst)
 	}
 	return (ret);
 }
+
+int				ft_num_valid(t_champ_list *lst)
+{
+	t_champ_list *tmp;
+	t_champ_list *tmp2;
+
+	tmp = lst;
+	while (tmp)
+	{
+		tmp2 = tmp->next;
+		while (tmp2)
+		{
+			if (tmp->champ->num == tmp2->champ->num)
+				return (0);
+			tmp2 = tmp2->next;
+		}
+		tmp = tmp->next;
+	}
+	return (1);
+}
+
+void			ft_set_champnum(t_champ_list *lst, t_opt *opt)
+{
+	t_champ_list	*tmp;
+	int				i;
+
+	tmp = lst;
+	i = -1;
+	while (tmp && ++i < opt->opt_n)
+	{
+		tmp->champ->num = opt->n_n[i];
+		tmp = tmp->next;
+	}
+	while (!ft_num_valid(lst))
+	{
+		i = 0;
+		tmp = lst;
+		while (tmp && i < opt->opt_n)
+		{
+			tmp = tmp->next;
+			i++;
+		}
+		while (tmp)
+		{
+			tmp->champ->num++;
+			tmp = tmp->next;
+		}
+	}
+}

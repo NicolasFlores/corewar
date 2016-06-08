@@ -17,7 +17,7 @@ static int	ft_check_arg(t_opt **opt, int argc, char **argv)
 	int		i;
 	char	*use;
 
-	use = "Usage : ./corewar [-d nb_cycles] <[-n num] champ1.cor> <...>";
+	use = "Usage : ./corewar [-d nb_cycles] [[-n num] ...] <champ1.cor> <...>";
 	if (argc == 1)
 	{
 		ft_putendl(use);
@@ -88,6 +88,8 @@ int			main(int argc, char **argv)
 	champ_list = NULL;
 	while (++i < argc)
 		init_champ(argv, i, &champ_list, opt);
+	if (opt->set && opt->opt_n)
+		ft_set_champnum(champ_list, opt);
 	ft_print_contest(champ_list);
 	mem = NULL;
 	ft_meminit(&mem, MEM_SIZE);
