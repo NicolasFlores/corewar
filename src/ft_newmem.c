@@ -70,8 +70,8 @@ void		ft_gameinit(t_mem **mem, t_champ_list *lst, int nb_champ)
 			j++;
 			tmp = tmp->next;
 		}
-		i += MEM_SIZE / nb_champ + MEM_SIZE % nb_champ;
-		while (tmp->n != i - 1 && tmp->n != MEM_SIZE - 1)
+		i += MEM_SIZE / nb_champ + lst->champ->pc % 2;
+		while (tmp->n != i - lst->champ->pc % 2 && tmp->n != MEM_SIZE - 1)
 			tmp = tmp->next;
 		lst = lst->next;
 	}

@@ -12,161 +12,117 @@
 
 #include "../include/vm.h"
 
-void		*(*g_opcode[])(t_vm **, t_param_list *, t_proc **) = {
-	ft_live, ft_ld, ft_st, ft_add, ft_sub, ft_and, ft_or, ft_xor, ft_zjmp,
-	ft_ldi, ft_sti, ft_fork, ft_lld, ft_lldi, ft_lfork, ft_aff};
-
-void		ft_game(t_vm *vm, t_champ_list *champ_list)
+void	init_game(t_proc_list **exec_proc, t_champ_list *champ_list, t_vm *vm)
 {
-	t_proc_list		*exec_proc;
-	t_proc_list		*tmp3;
-	t_param_list	*tmp;
 	int				i;
-	t_champ_list	*tmp2;
+	t_champ_list	*tmp;
 
 	i = 0;
-	tmp2 = champ_list;
-	exec_proc = NULL;
+	tmp = champ_list;
 	while (i < vm->proc)
 	{
-		if (!exec_proc)
-			exec_proc = ft_proc_lstnew(init_proc(tmp2->champ, i));
+		if (!(*exec_proc))
+			*exec_proc = ft_proc_lstnew(init_proc(tmp->champ, i));
 		else
-			ft_proc_lstadd(&exec_proc, ft_proc_lstnew(init_proc(tmp2->champ, i)));
+			ft_proc_lstadd(exec_proc, ft_proc_lstnew(init_proc(tmp->champ, i)));
 		i++;
-		tmp2 = tmp2->next;
+		tmp = tmp->next;
 	}
+}
+
+void	check_die(t_vm *vm, t_proc_list **exec_proc)
+{
+	if (vm->cycles == vm->ctd)
+	{
+		kill_proc(&vm, exec_proc);
+		if (vm->live >= NBR_LIVE || vm->check == MAX_CHECKS - 1)
+		{
+			vm->cdelta -= CYCLE_DELTA;
+			vm->check = 0;
+			if (vm->cdelta <= 0)
+				vm->cdelta = 1;
+		}
+		else
+			vm->check++;
+		vm->ctd += vm->cdelta;
+		vm->live = 0;
+	}
+}
+
+void	ft_param_game(t_vm *vm, t_proc_list **lst, int i, t_param_list *tmp)
+{
+	(*lst)->proc->codage = read_value(vm->mem, (*lst)->proc->pc, 1);
+	if ((*lst)->proc->opc == 1 || (*lst)->proc->opc == 9 ||
+		(*lst)->proc->opc == 12 || (*lst)->proc->opc == 15 ||
+		ft_codage_valid((*lst)->proc->opc, (char)((*lst)->proc->codage)))
+		while (--i)
+		{
+			if ((*lst)->proc->opc != 1 && (*lst)->proc->opc != 9 &&
+				(*lst)->proc->opc != 12 && (*lst)->proc->opc != 15)
+				(*lst)->proc->par = param_type((*lst)->proc->codage,
+												nb_param((*lst)->proc->opc) - i,
+												(*lst)->proc->opc);
+			else if ((*lst)->proc->opc == 1)
+				(*lst)->proc->par = DIR;
+			else
+				(*lst)->proc->par = DIRI;
+			if ((*lst)->proc->par != NUL)
+				set_param(vm->mem, tmp->param, (*lst)->proc->par, (*lst)->proc);
+			else
+				break ;
+			tmp = tmp->next;
+			(*lst)->proc->pc += param_size((*lst)->proc->par);
+		}
+}
+
+void	get_opc(t_proc_list **lst, t_vm *vm)
+{
+	int 			i;
+	t_param_list	*tmp;
+
+	if (!is_opcode((*lst)->proc->opc))
+		(*lst)->proc->opc = read_value(vm->mem, (*lst)->proc->pc + 1, 1);
+	if ((*lst)->proc->exec && is_opcode((*lst)->proc->opc))
+	{
+		(*lst)->proc->prevpc = (*lst)->proc->pc;
+		if ((*lst)->proc->opc == 1 || (*lst)->proc->opc == 9 ||
+			(*lst)->proc->opc == 12 || (*lst)->proc->opc == 15)
+			(*lst)->proc->pc++;
+		else
+			(*lst)->proc->pc += 2;
+		i = nb_param((*lst)->proc->opc) + 1;
+		tmp = (*lst)->proc->par_list;
+		ft_param_game(vm, lst, i, tmp);
+		(*lst)->proc->wex = vm->cycles + nb_cycles((*lst)->proc->opc) -
+							(vm->cycles != 0);
+		(*lst)->proc->exec = 0;
+		if ((*lst)->proc->pc >= MEM_SIZE)
+			(*lst)->proc->pc -= MEM_SIZE;
+	}
+	else if ((*lst)->proc->exec && !is_opcode((*lst)->proc->opc))
+		(*lst)->proc->pc++;
+}
+
+void	ft_game(t_vm *vm, t_champ_list *champ_list, t_opt *opt)
+{
+	t_proc_list		*exec_proc;
+	t_proc_list		*tmp;
+
+	exec_proc = NULL;
+	init_game(&exec_proc, champ_list, vm);
 	while (vm->proc)
 	{
-		if (vm->cycles == vm->ctd)
+		check_die(vm, &exec_proc);
+		tmp = exec_proc;
+		while (tmp)
 		{
-			kill_proc(&vm, &exec_proc);
-			if (vm->live >= NBR_LIVE || vm->check == MAX_CHECKS - 1)
-			{
-				vm->cdelta -= CYCLE_DELTA;
-				vm->check = 0;
-				if (vm->cdelta <= 0)
-					vm->cdelta = 1;
-			}
-			else
-				vm->check++;
-			vm->ctd += vm->cdelta;
-			vm->live = 0;
+			get_opc(&tmp, vm);
+			exec_opc(&tmp, &exec_proc, vm);
+			tmp = tmp->next;
 		}
-		tmp3 = exec_proc;
-		while (tmp3)
-		{
-			if (!is_opcode(tmp3->proc->opc))
-				tmp3->proc->opc = read_value(vm->mem, tmp3->proc->pc + 1, 1);
-			if (tmp3->proc->exec && is_opcode(tmp3->proc->opc))
-			{
-				tmp3->proc->prevpc = tmp3->proc->pc;
-				if (tmp3->proc->opc == 1 || tmp3->proc->opc == 9 || tmp3->proc->opc == 12 || tmp3->proc->opc == 15)
-					tmp3->proc->pc++;
-				else
-					tmp3->proc->pc += 2;
-				i = nb_param(tmp3->proc->opc);
-				tmp3->proc->codage = read_value(vm->mem, tmp3->proc->pc, 1);
-				tmp = tmp3->proc->par_list;
-				if (tmp3->proc->opc == 1 || tmp3->proc->opc == 9 || tmp3->proc->opc == 12 || tmp3->proc->opc == 15 ||
-					ft_codage_valid(tmp3->proc->opc, (char)(tmp3->proc->codage)))
-					while (i)
-					{
-						if (tmp3->proc->opc != 1 && tmp3->proc->opc != 9 && tmp3->proc->opc != 12 && tmp3->proc->opc != 15)
-							tmp3->proc->par = param_type(tmp3->proc->codage, nb_param(tmp3->proc->opc) - i, tmp3->proc->opc);
-						else if (tmp3->proc->opc == 1)
-							tmp3->proc->par = DIR;
-						else
-							tmp3->proc->par = DIRI;
-						if (tmp3->proc->par != NUL)
-							set_param(vm->mem, tmp->param, tmp3->proc->par, tmp3->proc);
-						else
-							break ;
-						i--;
-						tmp = tmp->next;
-						tmp3->proc->pc += param_size(tmp3->proc->par);
-						if (tmp3->proc->pc >= MEM_SIZE)
-							tmp3->proc->pc -= MEM_SIZE;
-					}
-				tmp3->proc->wex = vm->cycles + nb_cycles(tmp3->proc->opc);
-				if (vm->cycles != 0)
-					tmp3->proc->wex--;
-				tmp3->proc->exec = 0;
-			}
-			else if (tmp3->proc->exec && !is_opcode(tmp3->proc->opc))
-			{
-				tmp3->proc->pc++;
-				if (tmp3->proc->pc >= MEM_SIZE)
-					tmp3->proc->pc -= MEM_SIZE;
-			}
-			if (vm->cycles != 0 && vm->cycles == tmp3->proc->wex)
-			{
-				if (ft_codage_erase(vm->mem, tmp3->proc))
-				{
-					if (tmp3->proc->opc == 1 || tmp3->proc->opc == 9 || tmp3->proc->opc == 12 || tmp3->proc->opc == 15)
-						tmp3->proc->codage = read_value(vm->mem, tmp3->proc->prevpc + 1, 1);
-					else
-						tmp3->proc->codage = read_value(vm->mem, tmp3->proc->prevpc + 2, 1);
-				}
-				if (ft_param_erase(vm->mem, tmp3->proc))
-				{
-					tmp3->proc->pc = tmp3->proc->prevpc;
-					if (tmp3->proc->opc == 1 || tmp3->proc->opc == 9 || tmp3->proc->opc == 12 || tmp3->proc->opc == 15)
-						tmp3->proc->pc++;
-					else
-						tmp3->proc->pc += 2;
-					i = nb_param(tmp3->proc->opc);
-					tmp = tmp3->proc->par_list;
-					while (i)
-					{
-						if (tmp3->proc->opc != 1 && tmp3->proc->opc != 9 && tmp3->proc->opc != 12 && tmp3->proc->opc != 15)
-							tmp3->proc->par = param_type(tmp3->proc->codage, nb_param(tmp3->proc->opc) - i, tmp3->proc->opc);
-						else if (tmp3->proc->opc == 1)
-							tmp3->proc->par = DIR;
-						else
-							tmp3->proc->par = DIRI;
-						if (tmp3->proc->par != NUL)
-							set_param(vm->mem, tmp->param, tmp3->proc->par, tmp3->proc);
-						else
-							break ;
-						i--;
-						tmp = tmp->next;
-						tmp3->proc->pc += param_size(tmp3->proc->par);
-						if (tmp3->proc->pc >= MEM_SIZE)
-							tmp3->proc->pc -= MEM_SIZE;
-					}
-				}
-				//ft_printf("cycle = %d | opcode = %d | proc = %d | pc = %d\n", vm->cycles, tmp3->proc->opc, tmp3->proc->num, tmp3->proc->pc);
-				if ((tmp3->proc->opc == 1 || tmp3->proc->opc == 9 ||
-					ft_codage_valid(tmp3->proc->opc, (char)(tmp3->proc->codage))) && tmp3->proc->par != NUL)
-					g_opcode[tmp3->proc->opc - 1](&vm, tmp3->proc->par_list, &(tmp3->proc));
-				else if ((tmp3->proc->opc == 12 || tmp3->proc->opc == 15) && tmp3->proc->par != NUL)
-				{
-					ft_proc_lstadd(&exec_proc,
-								ft_proc_lstnew(g_opcode[tmp3->proc->opc - 1](&vm, tmp3->proc->par_list, &(tmp3->proc))));
-				}
-				tmp3->proc->exec = 1;
-				reset_param(&(tmp3->proc->par_list));
-				tmp3->proc->opc = 0;
-				tmp3->proc->wex = 0;
-				tmp3->proc->codage = 0;
-			}
-			tmp3 = tmp3->next;
-		}
+		if (opt->set && opt->opt_d && vm->cycles == opt->n_d)
+			break ;
 		vm->cycles++;
-		if (vm->cycles == /*4491*/22273)
-		{
-			tmp3 = exec_proc;
-			ft_printf("nbproc = %d nb live = %d\n", ft_proc_lstsize(exec_proc), vm->live);
-			ft_print_mem(vm->mem);
-			exit(0);
-		}
 	}
-	ft_print_mem(vm->mem);
-	ft_printf("cycles =  %d\n", vm->cycles);
-	tmp2 = champ_list;
-	while (tmp2->next && tmp2->champ->num * -1 != vm->last_live)
-		tmp2 = tmp2->next;
-	ft_printf("le joueur %d(%s) a gagne\n", tmp2->champ->num,
-			tmp2->champ->name);
+	ft_win(vm, opt, champ_list);
 }

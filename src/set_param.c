@@ -32,6 +32,13 @@ void	set_param(t_mem *mem, t_param *param, t_partype par, t_proc *proc)
 	param->par = par;
 }
 
+int		ft_free_erase(int i, t_proc **tmp2)
+{
+	ft_free_parlst(&((*tmp2)->par_list));
+	free(*tmp2);
+	return (i == 1);
+}
+
 int		ft_param_erase(t_mem *mem, t_proc *proc)
 {
 	t_param_list	*tmp;
@@ -42,33 +49,23 @@ int		ft_param_erase(t_mem *mem, t_proc *proc)
 	tmp = proc->par_list;
 	tmp2 = init_proc(proc->champ, 0);
 	tmp2->pc = proc->prevpc;
-	i = 0;
-	while (i < REG_NUMBER)
-	{
+	i = -1;
+	while (++i < REG_NUMBER)
 		tmp2->reg[i] = proc->reg[i];
-		i++;
-	}
-	i = 0;
 	while (tmp)
 	{
 		new = init_param();
 		if (tmp->param->par != NUL)
 			set_param(mem, new, tmp->param->par, tmp2);
-		new->par = tmp->param->par;
-		if (new->par == REG && *(new->reg) != *(tmp->param->reg))
-			i = 1;
-		else if (new->par == IND && new->ind != tmp->param->ind)
-			i = 1;
-		else if (new->par == DIRI && new->diri != tmp->param->diri)
-			i = 1;
-		else if (new->par == DIR && new->dir != tmp->param->dir)
+		if ((new->par == REG && *(new->reg) != *(tmp->param->reg))
+			|| (new->par == IND && new->ind != tmp->param->ind)
+			|| (new->par == DIRI && new->diri != tmp->param->diri)
+			|| (new->par == DIR && new->dir != tmp->param->dir))
 			i = 1;
 		tmp = tmp->next;
 		free(new);
 	}
-	ft_free_parlst(&(tmp2->par_list));
-	free(tmp2);
-	return (i);
+	return (ft_free_erase(i, &tmp2));
 }
 
 int		ft_codage_erase(t_mem *mem, t_proc *proc)

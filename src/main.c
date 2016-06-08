@@ -14,11 +14,13 @@
 
 static int	ft_check_arg(t_opt **opt, int argc, char **argv)
 {
-	int i;
+	int 	i;
+	char	*use;
 
+	use = "Usage : ./corewar [-d nb_cycles] <[-n num] champ1.cor> <...>";
 	if (argc == 1)
 	{
-		ft_putendl("Usage : ./corewar [-d N | -n N] <champ1.cor> <...>");
+		ft_putendl(use);
 		exit(0);
 	}
 	i = get_opt(opt, argc, argv);
@@ -91,7 +93,7 @@ int			main(int argc, char **argv)
 	ft_meminit(&mem, MEM_SIZE);
 	ft_gameinit(&mem, champ_list, ft_champ_lstsize(champ_list));
 	vm = init_vm(mem, champ_list);
-	ft_game(vm, champ_list);
+	ft_game(vm, champ_list, opt);
 	free(opt);
 	free_mem(&mem);
 	free_champ_list(&champ_list);

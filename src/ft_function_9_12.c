@@ -30,135 +30,43 @@ void	*ft_zjmp(t_vm **vm, t_param_list *lst, t_proc **proc)
 void	*ft_ldi(t_vm **vm, t_param_list *lst, t_proc **proc)
 {
 	int addr;
-	int size1;
-	int size2;
+	int size;
 
-	size1 = param_size(param_type((*proc)->codage, 0, 10));
-	size2 = param_size(param_type((*proc)->codage, 1, 10));
+	size = (*proc)->pc - 2 - param_size(param_type((*proc)->codage, 0, 10)) -
+			param_size(param_type((*proc)->codage, 1, 10)) - T_REG;
 	if (param_type((*proc)->codage, 0, 10) == DIRI)
-	{
-		if (lst->next->next->param->diri >= 0)
-			addr = (*proc)->pc - 2 - size1 - size2 - T_REG +
-					lst->param->diri % IDX_MOD;
-		else
-			addr = (*proc)->pc - 2 - size1 - size2 - T_REG -
-					(lst->param->diri * -1) % IDX_MOD;
-	}
+		addr = ft_index_value((*vm)->mem, lst->param->diri, size, 1);
 	else if (param_type((*proc)->codage, 0, 10) == IND)
-	{
-		if (lst->param->ind >= 0)
-			addr = read_value((*vm)->mem,
-								(*proc)->pc - 2 - size1 - size2 - T_REG +
-								lst->param->ind % IDX_MOD + 1, 4);
-		else
-			addr = read_value((*vm)->mem,
-								(*proc)->pc - 2 - size1 - size2 - T_REG -
-								(lst->param->ind * -1) % IDX_MOD - 1, 4);
-	}
+		addr = ft_index_value((*vm)->mem, lst->param->ind, size, 0);
 	else
-	{
-		if (*(lst->param->reg) >= 0)
-			addr = (*proc)->pc - 2 - size1 - size2 - T_REG +
-					*(lst->param->reg) % IDX_MOD;
-		else
-			addr = (*proc)->pc - 2 - size1 - size2 - T_REG +
-					(*(lst->param->reg) * -1) % IDX_MOD;
-	}
+		addr = ft_index_value((*vm)->mem, *(lst->param->reg), size, 1);
 	if (param_type((*proc)->codage, 1, 10) == DIRI)
-	{
-		if (lst->next->next->param->diri >= 0)
-			addr += (*proc)->pc - 2 - size1 - size2 - T_REG +
-					lst->next->param->diri % IDX_MOD;
-		else
-			addr += (*proc)->pc - 2 - size1 - size2 - T_REG +
-					(lst->next->param->diri * -1) % IDX_MOD;
-	}
+		addr += ft_index_value((*vm)->mem, lst->next->param->diri, size, 1);
 	else if (param_type((*proc)->codage, 1, 10) == IND)
-	{
-		if (lst->next->param->ind >= 0)
-			addr += read_value((*vm)->mem,
-								(*proc)->pc - 2 - size1 - size2 - T_REG +
-								lst->next->param->ind % IDX_MOD + 1, 4);
-		else
-			addr += read_value((*vm)->mem,
-								(*proc)->pc - 2 - size1 - size2 - T_REG -
-								(lst->next->param->ind * -1) % IDX_MOD - 1, 4);
-	}
+		addr = ft_index_value((*vm)->mem, lst->next->param->ind, size, 0);
 	else
-	{
-		if (*(lst->next->param->reg) >= 0)
-			addr += (*proc)->pc - 2 - size1 - size2 - T_REG +
-					*(lst->next->param->reg) % IDX_MOD;
-		else
-			addr += (*proc)->pc - 2 - size1 - size2 - T_REG -
-					(*(lst->next->param->reg) * -1) % IDX_MOD;
-	}
-	if (addr >= 0)
-	{
-		addr %= IDX_MOD;
-		*(lst->next->next->param->reg) = read_value((*vm)->mem,
-													addr + 1, REG_SIZE);
-	}
-	else
-	{
-		addr = -((addr * -1) % IDX_MOD);
-		*(lst->next->next->param->reg) = read_value((*vm)->mem,
-													addr - 1, REG_SIZE);
-	}
+		addr = ft_index_value((*vm)->mem, *(lst->next->param->reg), size, 1);
+	ft_set_addrind((*vm)->mem, addr, lst->next->next->param->reg);
 	return (NULL);
 }
 
 void	*ft_sti(t_vm **vm, t_param_list *lst, t_proc **proc)
 {
 	int addr;
-	int size1;
-	int size2;
+	int size;
 
-	size1 = param_size(param_type((*proc)->codage, 1, 11));
-	size2 = param_size(param_type((*proc)->codage, 2, 11));
+	size = (*proc)->pc - 2 - param_size(param_type((*proc)->codage, 1, 11)) -
+			param_size(param_type((*proc)->codage, 2, 11)) - T_REG;
 	if (param_type((*proc)->codage, 1, 11) == DIRI)
-	{
-		if (lst->next->param->diri >= 0)
-			addr = (*proc)->pc - 2 - size1 - size2 - T_REG +
-					lst->next->param->diri % IDX_MOD;
-		else
-			addr = (*proc)->pc - 2 - size1 - size2 - T_REG -
-					(lst->next->param->diri * -1) % IDX_MOD;
-	}
+		addr = ft_index_value((*vm)->mem, lst->next->param->diri, size, 1);
 	else if (param_type((*proc)->codage, 1, 11) == IND)
-	{
-		if (lst->next->param->ind >= 0)
-			addr = read_value((*vm)->mem,
-								(*proc)->pc - 2 - size1 - size2 - T_REG +
-								lst->next->param->ind % IDX_MOD + 1, 4);
-		else
-			addr = read_value((*vm)->mem,
-								(*proc)->pc - 2 - size1 - size2 - T_REG -
-								(lst->next->param->ind * -1) % IDX_MOD + 1, 4);
-	}
+		addr = ft_index_value((*vm)->mem, lst->next->param->ind, size, 0);
 	else
-	{
-		if (*(lst->next->param->reg) >= 0)
-			addr = (*proc)->pc - 2 - size1 - size2 - T_REG +
-					*(lst->next->param->reg) % IDX_MOD;
-		else
-			addr = (*proc)->pc - 2 - size1 - size2 - T_REG -
-					(*(lst->next->param->reg) * -1) % IDX_MOD;
-	}
+		addr = ft_index_value((*vm)->mem, *(lst->next->param->reg), size, 1);
 	if (param_type((*proc)->codage, 2, 11) == DIRI)
-	{
-		if (lst->next->next->param->diri >= 0)
-			addr += lst->next->next->param->diri % IDX_MOD;
-		else
-			addr -= (lst->next->next->param->diri * -1) % IDX_MOD;
-	}
+		addr += ft_index_value_add(lst->next->next->param->diri);
 	else
-	{
-		if (*(lst->next->next->param->reg) >= 0)
-			addr += *(lst->next->next->param->reg) % IDX_MOD;
-		else
-			addr -= (*(lst->next->next->param->reg) * -1) % IDX_MOD;
-	}
+		addr += ft_index_value_add(*(lst->next->next->param->reg));
 	if (addr >= 0)
 		addr %= IDX_MOD;
 	else

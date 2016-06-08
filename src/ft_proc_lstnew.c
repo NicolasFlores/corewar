@@ -34,6 +34,18 @@ void		ft_proc_lstadd(t_proc_list **lst, t_proc_list *new)
 	*lst = new;
 }
 
+void		ft_proc_lstaddend(t_proc_list **lst, t_proc_list *new)
+{
+	t_proc_list *tmp;
+
+	if (new == NULL)
+		return ;
+	tmp = *lst;
+	while (tmp && tmp->next)
+		tmp = tmp->next;
+	tmp->next = new;
+}
+
 void		ft_remove_proc(t_proc_list **lst, int n)
 {
 	t_proc_list *tmp;

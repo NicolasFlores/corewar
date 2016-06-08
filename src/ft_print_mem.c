@@ -22,37 +22,7 @@ void	ft_print_mem(t_mem *mem)
 		ft_printf("%.2hhx ", mem->oct);
 		i++;
 		mem = mem->next;
-		if (i != 0 && i % 64 == 0)
-			ft_putchar('\n');
-	}
-}
-
-void	ft_print_memn(t_mem *mem)
-{
-	int i;
-
-	i = 0;
-	while (i < MEM_SIZE)
-	{
-		ft_printf("%d\n", mem->n);
-		i++;
-		mem = mem->next;
-		if (i != 0 && i % 64 == 0)
-			ft_putchar('\n');
-	}
-}
-
-void	ft_print_rmemn(t_mem *mem)
-{
-	int i;
-
-	i = 0;
-	while (i < MEM_SIZE)
-	{
-		ft_printf("%d\n", mem->prev->n);
-		i++;
-		mem = mem->prev;
-		if (i != 0 && i % 64 == 0)
+		if (i != 0 && i % 32 == 0)
 			ft_putchar('\n');
 	}
 }

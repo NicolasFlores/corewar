@@ -12,6 +12,14 @@
 
 #include "../include/vm.h"
 
+void	ft_carry(int val, t_proc **proc)
+{
+	if (val == 0)
+		(*proc)->carry = 1;
+	else
+		(*proc)->carry = 0;
+}
+
 void	*ft_live(t_vm **vm, t_param_list *lst, t_proc **proc)
 {
 	t_champ_list	*tmp;
@@ -22,7 +30,10 @@ void	*ft_live(t_vm **vm, t_param_list *lst, t_proc **proc)
 	while (tmp)
 	{
 		if (lst->param->dir == (tmp->champ->num) * -1)
+		{
 			(*vm)->last_live = lst->param->dir;
+			break ;
+		}
 		tmp = tmp->next;
 	}
 	return (NULL);
@@ -45,7 +56,8 @@ void	*ft_ld(t_vm **vm, t_param_list *lst, t_proc **proc)
 	}
 	else
 	{
-		val = (*proc)->pc - 2 - IND_SIZE - T_REG - (lst->param->ind * -1) % IDX_MOD;
+		val = (*proc)->pc - 2 - IND_SIZE - T_REG -
+				(lst->param->ind * -1) % IDX_MOD;
 		*(lst->next->param->reg) = read_value((*vm)->mem, val - 1, REG_SIZE);
 	}
 	if (val == 0)
@@ -74,13 +86,9 @@ void	*ft_st(t_vm **vm, t_param_list *lst, t_proc **proc)
 	{
 		addr = (*proc)->pc - 2 - IND_SIZE - T_REG -
 				(lst->next->param->ind * -1) % IDX_MOD;
-		write_value(&((*vm)->mem), *(lst->param->reg), addr + 1, (*proc)->champ);
+		write_value(&((*vm)->mem), *(lst->param->reg), addr + 1,
+					(*proc)->champ);
 	}
-	/*if ((*vm)->cycles >= 4000 && *(lst->param->reg) != 0)
-	{
-		ft_printf("cycle : %d proc%d pc = %d ind = %d", (*vm)->cycles, (*proc)->num, (*proc)->pc, lst->next->param->ind);
-		ft_printf(" write %d a %d\n", *(lst->param->reg), addr);
-	}*/
 	return (NULL);
 }
 

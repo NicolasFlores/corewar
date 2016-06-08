@@ -13,10 +13,60 @@
 #ifndef VM_H
 # define VM_H
 
+/*
+** include
+*/
+
 # include "../libftprintf/ft_printf.h"
 # include "../libftprintf/libft.h"
-# include "op.h"
 # include <fcntl.h>
+
+/*
+** define
+*/
+
+# define IND_SIZE				2
+# define REG_SIZE				4
+# define DIR_SIZE				REG_SIZE
+
+# define REG_CODE				1
+# define DIR_CODE				2
+# define IND_CODE				3
+
+# define MAX_ARGS_NUMBER		4
+# define MAX_PLAYERS			4
+# define MEM_SIZE				(4*1024)
+# define IDX_MOD				(MEM_SIZE / 8)
+# define CHAMP_MAX_SIZE			(MEM_SIZE / 6)
+
+# define COMMENT_CHAR			'#'
+# define LABEL_CHAR				':'
+# define DIRECT_CHAR			'%'
+# define SEPARATOR_CHAR			','
+
+# define LABEL_CHARS			"abcdefghijklmnopqrstuvwxyz_0123456789"
+
+# define NAME_CMD_STRING		".name"
+# define COMMENT_CMD_STRING		".comment"
+
+# define REG_NUMBER				16
+
+# define CYCLE_TO_DIE			1536
+# define CYCLE_DELTA			50
+# define NBR_LIVE				21
+# define MAX_CHECKS				10
+
+# define T_REG					1
+# define T_DIR					2
+# define T_IND					4
+# define T_LAB					8
+# define PROG_NAME_LENGTH		(128)
+# define COMMENT_LENGTH			(2048)
+# define COREWAR_EXEC_MAGIC		0xea83f3
+
+/*
+** struct
+*/
 
 typedef struct			s_reg
 {
@@ -121,6 +171,10 @@ typedef struct			s_proc_list
 	struct s_proc_list	*next;
 }						t_proc_list;
 
+/*
+** function
+*/
+
 int						get_opt(t_opt **opt, int argc, char **argv);
 int						check_arg(char **buf, char *arg);
 t_champ_list			*ft_champ_lstnew(t_champ *new);
@@ -135,7 +189,15 @@ void					ft_meminit(t_mem **mem, int size);
 void					ft_gameinit(t_mem **mem, t_champ_list *lst,
 									int nb_champ);
 t_vm					*init_vm(t_mem *mem, t_champ_list *lst);
-void					ft_game(t_vm *vm, t_champ_list *champ_list);
+void					ft_game(t_vm *vm, t_champ_list *champ_list, t_opt *opt);
+void					get_opc(t_proc_list **lst, t_vm *vm);
+void					exec_opc(t_proc_list **lst, t_proc_list **exec_proc,
+								t_vm *vm);
+void					ft_win(t_vm *vm, t_opt *opt, t_champ_list *champ_list);
+void					ft_carry(int val, t_proc **proc);
+int						ft_index_value(t_mem *mem, int val, int size, char dir);
+void					ft_set_addrind(t_mem *mem, int addr, int *reg);
+int						ft_index_value_add(int val);
 void					*ft_live(t_vm **vm, t_param_list *lst, t_proc **proc);
 void					*ft_ld(t_vm **vm, t_param_list *lst, t_proc **proc);
 void					*ft_st(t_vm **vm, t_param_list *lst, t_proc **proc);
@@ -175,13 +237,11 @@ t_proc					*init_proc(t_champ *champ, int n);
 void					kill_proc(t_vm **vm, t_proc_list **exec_proc);
 t_proc_list				*ft_proc_lstnew(t_proc *proc);
 void					ft_proc_lstadd(t_proc_list **lst, t_proc_list *new);
+void					ft_proc_lstaddend(t_proc_list **lst, t_proc_list *new);
 void					ft_remove_proc(t_proc_list **lst, int n);
 int						ft_proc_lstsize(t_proc_list *lst);
 
-/*
-** debug
-*/
-
 void					ft_print_mem(t_mem *mem);
+
 
 #endif

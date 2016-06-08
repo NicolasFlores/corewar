@@ -39,13 +39,13 @@ FLAGS = -Wall -Wextra -Werror
 all: $(NAME)
 
 $(NAME):
-	gcc $(FLAGS) -I $(HEAD) -c $(SRC)
-	ar rc $(NAME) $(OBJ)
+	@gcc $(FLAGS) -I $(HEAD) -c $(SRC)
+	@ar rc $(NAME) $(OBJ)
 
 clean:
-	rm -f $(OBJ) ft_printf.h.gch
+	@rm -f $(OBJ) ft_printf.h.gch
 
 fclean: clean
-	rm -f $(NAME)
+	@rm -f $(NAME)
 
 re: fclean all
