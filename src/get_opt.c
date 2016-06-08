@@ -37,6 +37,8 @@ static void	check_opt_format(char **argv, int ret)
 			exit(write(2, "Invalid option\n", 15));
 		i++;
 	}
+	if (ft_atoi(argv[ret + 1]) > INT_MAX || ft_atoi(argv[ret + 1]) <= 0)
+		exit(write(2, "Number must be an integer >= 1\n", 31));
 }
 
 void		set_optn(t_opt **opt, char **argv, int size, int ret)
