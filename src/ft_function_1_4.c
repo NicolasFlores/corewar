@@ -6,7 +6,7 @@
 /*   By: nflores <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/20 11:40:04 by nflores           #+#    #+#             */
-/*   Updated: 2016/05/30 16:45:13 by nflores          ###   ########.fr       */
+/*   Updated: 2016/06/10 12:41:29 by nflores          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ void	*ft_live(t_vm **vm, t_param_list *lst, t_proc **proc)
 		if (lst->param->dir == (tmp->champ->num) * -1)
 		{
 			(*vm)->last_live = lst->param->dir;
+			ft_printf("Un processus dit que le joueur %d(%s) est en vie\n",
+					tmp->champ->num, tmp->champ->name);
 			break ;
 		}
 		tmp = tmp->next;
