@@ -1,25 +1,7 @@
 .name "tests"
 .comment "toto"
-live %43
-live %43
-live %43
-live %43
-live %43
-live %43
-live %43
-live %43
-live %43
-live %43
-live %43
-live %43
-live %43
-live %43
-live %43
-live %43
-live %43
-live %43
-live %43
-live %43
-live %42
-live %42
-	
+
+st r1, 42
+ld %1, r2
+st r2, 26
+fork %10
